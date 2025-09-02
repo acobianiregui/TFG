@@ -1,0 +1,100 @@
+%preambulo
+\documentclass[12pt, a4paper]{report} 
+
+\usepackage[utf8]{inputenc} 
+\usepackage[T1]{fontenc} 
+\usepackage[spanish]{babel} 
+\usepackage{amsmath, amsfonts, amssymb} 
+\usepackage{fancyhdr} 
+\usepackage{titlesec}
+\usepackage{graphicx} 
+\usepackage{geometry}
+\usepackage{booktabs} 
+\usepackage{float}
+\usepackage{caption}
+\captionsetup[table]{labelformat=simple} % Aqui para la nomenclatura de las tablas
+%Plots / señales... 
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{subcaption} %Subfiguras
+
+%Links 
+\usepackage{hyperref} 
+\hypersetup{
+    colorlinks=false,
+    }
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,      % enlaces internos (como footnotes)
+  citecolor=black,      % enlaces a bibliografía
+  urlcolor=blue,        % enlaces web
+  pdfborder={0 0 0},     % <-- elimina los recuadros de 
+  pdftitle={TFG ACI},
+  pdfpagemode=FullScreen
+}
+%Codigo
+\usepackage{listings} 
+\usepackage{minted}
+\usepackage{xcolor}
+\usepackage[final]{pdfpages}
+\usepackage{lipsum}
+\usepackage{changepage}
+\usepackage{xtab}
+\usepackage[most]{tcolorbox}
+\usepackage[shortlabels]{enumitem}
+\usepackage{matlab-prettifier} %Codigo matlab
+%Referencias 
+\usepackage{csquotes}
+
+\usepackage[
+    backend=biber,
+    sorting=ynt
+]{biblatex}
+\addbibresource{referencias.bib}
+\fancyhf{} % Limpia encabezado
+
+% Cabecera 
+\fancyhead[L]{\includegraphics[height=25pt]{imagenes/comillas_icai_logo.jpeg}}          
+\fancyhead[C]{\leftmark}        
+\fancyhead[R]{A.C.I}
+\setlength{\headsep}{50pt}  %Modificar salto entre cabecera y contenido
+
+
+% Pie de pagina 
+\fancyfoot[C]{\thepage}  
+
+% Capitulos       
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries}
+  {\chaptername\ \thechapter}{10pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{-70pt}{30pt}
+
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+
+
+
+\title{TFG}
+\author{anton.cobian.iregui }
+\date{July 2025}
+
+\begin{document}
+
+\input{portada}
+
+\pagestyle{fancy}
+
+\tableofcontents 
+
+\clearpage
+
+\section{Introduction}
+\include{cap1}
+
+\clearpage
+
+\printbibliography
+
+\end{document}
