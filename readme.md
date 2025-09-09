@@ -38,3 +38,12 @@ project
         |  ... 
 ```
 
+## 📜 Licencia
+
+Este proyecto se distribuye bajo la licencia **MIT**.  
+Puedes usarlo, modificarlo y compartirlo libremente, siempre mencionando al autor.
+
+© 2025 Anton Cobian Iregui
+
+Para más detalles, consulta el archivo [LICENSE](./LICENSE).
+
