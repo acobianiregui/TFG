@@ -1,0 +1,116 @@
+%preambulo
+\documentclass[12pt, a4paper]{report} 
+
+\usepackage[utf8]{inputenc} 
+\usepackage[T1]{fontenc} 
+\usepackage[spanish]{babel} 
+\usepackage{amsmath, amsfonts, amssymb} 
+\usepackage{fancyhdr} 
+\usepackage{titlesec}
+\usepackage{graphicx} 
+\usepackage{booktabs} 
+\usepackage{float}
+\usepackage{caption}
+\captionsetup[table]{labelformat=simple} % Aqui para la nomenclatura de las tablas
+%Plots / señales... 
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{subcaption} %Subfiguras
+
+%Margenes
+\usepackage[a4paper,
+            top=2.54cm,
+            bottom=2.54cm,
+            left=2.54cm,
+            right=2.54cm]{geometry}
+
+%Links 
+\usepackage{hyperref} 
+\hypersetup{
+    colorlinks=false,
+    }
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,      % enlaces internos (como footnotes)
+  citecolor=black,      % enlaces a bibliografía
+  urlcolor=blue,        % enlaces web
+  pdfborder={0 0 0},     % <-- elimina los recuadros de 
+  pdftitle={TFG ACI},
+  pdfpagemode=FullScreen
+}
+%Codigo
+\usepackage{listings} 
+\usepackage{minted}
+\usepackage{xcolor}
+\usepackage[final]{pdfpages}
+\usepackage{lipsum}
+\usepackage{changepage}
+\usepackage{xtab}
+\usepackage[most]{tcolorbox}
+\usepackage[shortlabels]{enumitem}
+\usepackage{matlab-prettifier} %Codigo matlab
+%Referencias 
+\usepackage{csquotes}
+
+\usepackage[
+    backend=biber,
+    sorting=ynt,
+    style=apa
+]{biblatex}
+\addbibresource{referencias2.bib}
+\fancyhf{} % Limpia encabezado
+
+% Cabecera 
+\fancyhead[L]{\includegraphics[height=25pt]{imagenes/comillas_icai_logo.jpeg}}          
+\fancyhead[C]{\leftmark}        
+\fancyhead[R]{A.C.I}
+\setlength{\headsep}{50pt}  %Modificar salto entre cabecera y contenido
+
+
+% Pie de pagina 
+\fancyfoot[C]{\thepage}  
+
+% Capitulos       
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries}
+  {\chaptername\ \thechapter}{10pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{-70pt}{30pt}
+
+\makeatletter
+\def\@makechapterhead#1{%
+  {\parindent \z@ \raggedright \normalfont
+    \ifnum \c@secnumdepth >\m@ne
+        \huge\bfseries \thechapter\quad #1\par\nobreak
+        \vskip 40pt
+    \fi}}
+\makeatother
+
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+\begin{document}
+\input{Anexo B/portadaB}
+
+\pagestyle{fancy}
+
+\chapter{Introducción}
+
+Este trabajo tiene 
+
+\chapter{Estado de la cuestión}
+
+\chapter{Motivación}
+
+\chapter{Objetivos del proyecto}
+
+\chapter{Alineación con Objetivos de Desarrollo Sostenible}
+\href{Link}{https://sdgs.un.org/goals} \\
+3, 10, 16 + ...
+
+\chapter{Metodología del trabajo}
+
+\chapter{Recursos a emplear}
+
+
+\end{document}
