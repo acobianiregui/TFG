@@ -1,47 +1,52 @@
-# 📡 TFG: 
+# 📡 TFG: Separación de señales electromiográficas según el músculo de procedencia
 
 Este repositorio contiene el Trabajo de Fin de Grado en **Ingeniería de Telecomunicación**.  
-El proyecto trata sobre **[breve descripción]**.  
+El proyecto trata sobre la **separación de señales electromiográficas (EMG) según el músculo de procedencia**, con aplicaciones en prótesis activas y técnicas de reconexión nerviosa como **VDMT** y **RPNI**.  
 
 ---
 
 ## 🎯 Objetivo
-El objetivo principal es **[frase resumiendo tesis]**, explorando técnicas de **[ej. procesamiento de señales, machine learning, diseño de hardware, etc.]**.
+El objetivo principal es **identificar la procedencia de señales EMG que se miden de forma superpuesta**, explorando técnicas de **procesamiento de señales y análisis de datos biológicos**.  
+Esto permitirá mejorar la precisión en el control de prótesis y en interfaces neurales que dependen de señales musculares específicas.
 
 ---
 
 ## 🛠️ Tecnologías utilizadas
-- Lenguajes: ?
-- Frameworks/Librerías: ?
-- Herramientas: ?
+- Lenguajes: MATLAB, Python  
+- Frameworks/Librerías: NumPy, SciPy, Matplotlib, Scikit-learn  
+- Herramientas: MATLAB, Git, LaTeX  
 
 ---
 
 ## 📂 Estructura del repositorio
 ```
 project
-│   README.md
-│   main.tex
-|   referencias.bib
-|   TFG.pdf    
+│ README.md
+│ main.tex
+│ referencias.bib
+│ TFG.pdf
 │
 └───Secciones
-│   │   portada.tex
-│   │   cap1.tex
-|   |   ...
-│   
+│ │ portada.tex
+│ │ cap1.tex
+│ │ ...
+│
 └───Codigos
-    └───MATLAB
-    |   |  codigo1.m
-    |   |  ...
-    └───OTROS
-        |  ... 
+│ └───MATLAB
+│ │ │ codigo1.m
+│ │ │ ...
+│ └───OTROS
+│ │ ...
+│
+└───AnexoB
+│ ...
 ```
+---
 
 ## 📜 Licencia
 
 Este proyecto se distribuye bajo la licencia **MIT**.  
-Puedes usarlo, modificarlo y compartirlo libremente, siempre mencionando al autor.
+Puedes usarlo, modificarlo y compartirlo libremente, siempre mencionando al autor.  
 
 © 2025 Anton Cobian Iregui
 
