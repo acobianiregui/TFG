@@ -1,0 +1,104 @@
+% Paquete requerido: \usepackage{pgfgantt}
+
+\begin{figure}[h!]
+\centering
+\begin{ganttchart}[
+    % Grid y estructura
+    hgrid,
+    vgrid={*6{draw=gray!30, line width=.75pt}},
+    % Dimensiones - MÁS ANCHO QUE ALTO
+    x unit=2.8cm,
+    y unit chart=0.7cm,
+    bar height=0.6,
+    group height=0.65,
+    milestone height=0.5,
+    % Estilos de títulos
+    title/.style={fill=black!10, draw=black!50, line width=0.5pt},
+    title label font=\bfseries\normalsize,
+    title height=1,
+    % Estilos de grupos
+    group/.style={fill=black!20, draw=black!60, line width=0.8pt, rounded corners=2pt},
+    group label font=\bfseries\footnotesize,
+    group left shift=0,
+    group right shift=0,
+    group peaks height=0.2,
+    group label node/.append style={anchor=east, xshift=-2mm},
+    inline,
+    % Estilos de barras
+    bar/.style={fill=blue!50, draw=blue!70, line width=0.6pt, rounded corners=1pt},
+    bar label font=\scriptsize,
+    bar label node/.append style={anchor=east, xshift=-2mm},
+    % Estilos de hitos
+    milestone/.style={fill=red!60, draw=red!80, line width=0.8pt},
+    milestone label font=\scriptsize\bfseries,
+    milestone label node/.append style={anchor=east, xshift=-2mm},
+    % Espaciado
+    bar top shift=0.15,
+    bar bottom shift=0.15
+]{1}{6}
+
+% Títulos principales
+\gantttitle{\textbf{Cronograma del TFG}}{6} \\
+\gantttitle[title/.style={fill=black!20, draw=black!60}]{2025}{6} \\
+\gantttitlelist{Ene,Feb,Mar,Abr,May,Jun}{1} \\[grid]
+
+% Fase 1
+\ganttgroup[
+    group/.append style={fill=blue!20, draw=blue!60}
+]{1. Investigación}{1}{1} \\
+\ganttbar[
+    bar/.append style={fill=blue!50, draw=blue!70}
+]{Revisión bibliográfica}{1}{1} \\[grid]
+
+% Fase 2
+\ganttgroup[
+    group/.append style={fill=green!20, draw=green!60}
+]{2. Propuesta}{2}{2} \\
+\ganttbar[
+    bar/.append style={fill=green!50, draw=green!70}
+]{Redacción Anexo B}{2}{2} \\[grid]
+
+% Fase 3
+\ganttgroup[
+    group/.append style={fill=yellow!30, draw=yellow!70}
+]{3. Adquisición}{2}{3} \\
+\ganttbar[
+    bar/.append style={fill=yellow!60, draw=yellow!80}
+]{Preprocesamiento EMG}{2}{3} \\[grid]
+
+% Fase 4
+\ganttgroup[
+    group/.append style={fill=orange!20, draw=orange!60}
+]{4. Análisis}{3}{4} \\
+\ganttbar[
+    bar/.append style={fill=orange!60, draw=orange!80}
+]{Implementación PCA/ICA}{3}{4} \\[grid]
+
+% Fase 5
+\ganttgroup[
+    group/.append style={fill=red!20, draw=red!60}
+]{5. Evaluación}{5}{5} \\
+\ganttbar[
+    bar/.append style={fill=red!50, draw=red!70}
+]{Validación de resultados}{5}{5} \\[grid]
+
+% Fase 6
+\ganttgroup[
+    group/.append style={fill=purple!20, draw=purple!60}
+]{6. Documentación}{6}{6} \\
+\ganttbar[
+    bar/.append style={fill=purple!50, draw=purple!70}
+]{Redacción y defensa}{6}{6} \\[grid]
+
+% Hitos
+\ganttmilestone[
+    milestone/.append style={fill=orange!70, draw=orange!90, shape=diamond}
+]{Entrega Parcial}{4} \\
+\ganttmilestone[
+    milestone/.append style={fill=red!70, draw=red!90, shape=diamond}
+]{Defensa Final}{6}
+
+\end{ganttchart}
+\caption{Cronograma del proyecto distribuido en seis fases mensuales durante el año 2025.}
+\label{fig:gantt}
+\end{figure}
