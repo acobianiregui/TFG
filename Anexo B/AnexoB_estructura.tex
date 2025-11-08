@@ -1,0 +1,119 @@
+%preambulo
+\documentclass[12pt, a4paper]{report} 
+
+\usepackage[utf8]{inputenc} 
+\usepackage[T1]{fontenc} 
+\usepackage[spanish]{babel} 
+\usepackage{amsmath, amsfonts, amssymb} 
+\usepackage{fancyhdr} 
+\usepackage{titlesec}
+\usepackage{graphicx} 
+\usepackage{booktabs} 
+\usepackage{float}
+\usepackage{caption}
+\captionsetup[table]{labelformat=simple} % Aqui para la nomenclatura de las tablas
+%Plots / señales... 
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{subcaption} %Subfiguras
+
+%Margenes
+\usepackage[a4paper,
+            top=2.54cm,
+            bottom=2.54cm,
+            left=2.54cm,
+            right=2.54cm]{geometry}
+
+%Links 
+\usepackage{hyperref} 
+\hypersetup{
+    colorlinks=false,
+    }
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,      % enlaces internos (como footnotes)
+  citecolor=black,      % enlaces a bibliografía
+  urlcolor=blue,        % enlaces web
+  pdfborder={0 0 0},     % <-- elimina los recuadros de 
+  pdftitle={TFG ACI},
+  pdfpagemode=FullScreen
+}
+%Codigo
+\usepackage{listings} 
+\usepackage{minted}
+\usepackage{xcolor}
+\usepackage[final]{pdfpages}
+\usepackage{lipsum}
+\usepackage{changepage}
+\usepackage{xtab}
+\usepackage[most]{tcolorbox}
+\usepackage[shortlabels]{enumitem}
+%Referencias 
+\usepackage{csquotes}
+
+\usepackage[
+    backend=biber,
+    sorting=ynt,
+    style=apa
+]{biblatex}
+\addbibresource{referencias2.bib}
+\fancyhf{} % Limpia encabezado
+% Capitulos       
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries}
+  {\chaptername\ \thechapter}{10pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{-60pt}{30pt}
+
+\begin{document}
+
+\chapter*{Boceto Anexo B}
+\section*{1. Introducción}
+Esta sección detallará la contextualización del trabajo en el ámbito de la ingeniería de telecomunicaciones y sus posibles aplicaciones en otros campos, como la ingeniería biómedica.
+\section*{2. Estado de la cuestión}
+Actualmente se dispone de una gran variedad de estudios que investigan los algoritmos de separación de señales y sus aplicaciones en ámbitos como imágenes, sonido e incluso señales EEG. No obstante, la implementación de estas técnicas en señales electromiográficas permanece relativamente poco explorada, a pesar de su potencial para ofrecer información valiosa sobre músculos reinervados.  (A expandir)
+\section*{3. Motivación}
+\section*{4. Objetivos del proyecto}
+A continuación se detallan los objetivos del Trabajao Fin de Grado, explicándose más a fondo en la versión final del Anexo B.  
+\begin{itemize}
+    \item Analizar y tratar la señal del músculo reinnervado.
+    \item Separación de la señal EMG, resultando en la señal del nervio y el músculo auxiliar
+    \item Discusión de varios algoritmos, exponiendo sus pros y contras, y finalmente seleccionando uno para 
+    \item Explicar el uso y comportamiento del algortimo para el público menos técnico (ejemplo: manual de uso para personal sanitario)
+    
+\end{itemize}
+
+\section*{5. Alineación con ODS}
+\href{Link}{https://sdgs.un.org/goals}
+\begin{itemize}
+    \item Objetivo 3º: Salud y bienestar
+    \item Objetivo 9º: Industria, innovación e infraestructura.
+\item Objetivo 16º: Reducción de desigualdades
+\end{itemize}
+\section*{6. Metodología del trabajo}
+En esta sección se expondrá la planificación del trabajo para su adecuada finalización. Se nombrarán los diferentes algoritmos de los que se dispone, pruebas que se realizarán y los procedimientos que sean pertinentes. Tras su explicación en detalle, se ilustrará con un cronograma o un diagrama de Gantt.
+\section*{7. Recursos empleados}
+Los recursos a emplear en este trabajo incluyen otros algoritmos existentes, así como lenguajes y herramientas de programación. Entre ellos se encuentran python, matlab, Github, Zotero...
+\\Los algoritmos más relevantes para este trabajo son los mencionados a continuación:
+\begin{itemize}
+    \item ICA (Separación a ciegas pura)
+    \item Constrained ICA (Referencia conocida)
+    \begin{itemize}
+        \item Kernel Constrained
+        \item Correlation Constrained
+    \end{itemize} 
+    \item Non-linear 
+    \begin{itemize}
+        \item SOBI
+        \item Non-linear ICA
+        \item Convolutive ICA
+    \end{itemize}
+    
+\end{itemize}
+
+//
+
+A continuación se adjuntan referencias que posiblemente se emplearán a lo largo del proyecto:
+
+
+
+\end{document}
