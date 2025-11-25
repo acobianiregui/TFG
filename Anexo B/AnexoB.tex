@@ -97,22 +97,127 @@
 
 \chapter{Introducción}
 
-Este trabajo tiene \\
-Ahora mismo BSS se usa principalmenete para EEG
+La ingeniería de telecomunicaciones desempeña un papel clave en el desarrollo de tecnologías basadas en la electrónica, la instrumentación y el procesamiento avanzado de señales. Uno de los campos emergentes donde estas disciplinas convergen es el ámbito de la ingeniería biomédica, concretamente en el análisis y procesamiento de señales fisiológicas para aplicaciones de rehabilitación y control de prótesis. (A expandir)
+
+Específicamente, el estudio de señales como el electromiograma (EMG) permite obtener información detallada sobre la actividad muscular, fundamental para comprender el funcionamiento del sistema neuromuscular, diseñar sistemas de asistencia y optimizar los procesos de rehabilitación. La correcta interpretación de estas señales depdende tanto de la adquisición precisa de los datos como del empleo de técnicas avanzadas de procesamiento, incluyendo extracción de características y algoritmos de separación de fuentes.
+
+En este conet
+
+Con todo, este Trabajo Fin de Grado pretende centrarse en el desarrollo de algoritmos de separación para señales EMG, con el objetivo de mejorar la calidad de las señales procesadas y facilitar su uso en entornos clínicos y de investigación. A su vez, el trabajo pretende demostrar la importancia de las telecomunciaciones en la ingeniería biomédica y como esta puede generar soluciones tecnológicas innovadoras que contribuyan a la salud y bienestar, potencien los dispositivos médicos y reduzcan barreras en el acceso a tecnologías avanzadas.
 
 \chapter{Estado de la cuestión}
-
+Actualmente, se dispone de una gran variedad de estudios que investigan los algoritmos de separación de señales y sus aplicaciones en ámbitos como imágenes, sonido e incluso señales EEG. No obstante, la implementación de estas técnicas en señales electromiográficas permanece relativamente poco explorada, a pesar de su potencial para ofrecer información valiosa sobre músculos reinervados.  (A expandir)
 \chapter{Motivación}
+Cuando una persona pierde una extremidad, los nervios motores de la terminación quedan seccionados y, a menos que se reconecten, terminan formando "nervios dolorosos" (terminaciones nerviosas desorganizadas). Por ello, con el objetivo de mejorar la integración neuromuscular, se redirigen los nervios motores a músculos intactos que ya no tienen utilidad con el fin de que estos se conviertan en amplificadores biológicos para las señales. Este proceso se conoce como reinnervación muscular y es vital para la mejora del control en prótesis. No obstante, al hacer uso de músculos auxiliares como bioamplificadores, estos interaccionan con el nervio redirigido y modifican la forma y características de la señal emitida. (A expandir) %Feedback Romano?
+
+Este trabajo Fin de Grado busca diseñar e implementar un algoritmo que sea capaz de identificar la señal del nervio, procesarla y separarla de la interacción del músculo auxiliar. De esta manera, se busca mejorar la precisión y robustez en el control de prótesis basadas en EMG.
 
 \chapter{Objetivos del proyecto}
+Para realizar este Trabajo Fin de Grado de manera satisfactoria, es crucial establecer las metas que guían el desarrollo del mismo. Por ello, en esta sección se definirán los objetivos que orientan tanto la parte teórica como la práctica del proyecto para así asegurar una estructura coherente y enfoque preciso.
 
+A continuación, se presentan los objetivos generales y específicos que guiarán el desarrollo del proyecto.
+
+\begin{itemize}
+    \item Analizar y tratar la señal del músculo reinnervado.
+ \end{itemize}   
+    %Explicacion aqui
+    \noindent Cómo se mencionó en la sección introductoria de este documento, las señales de los músculos reinnervados se ven alterada por la interacción con el músculo auxiliar y, por lo tanto, sus características son considerablemente diferentes respecto a la señal de un músculo sano. Comprender las diferencias entre ambas señales en cuanto amplitud, frecuencia, fase será un aspecto clave para poder completar el trabajo.
+\begin{itemize}
+    \item Separación de la señal EMG, resultando en la señal del nervio y del músculo auxiliar
+\end{itemize}
+\noindent Una vez analizada la señal del músculo reinnervado e identificadas sus características, se puede emplear esta información para diseñar y entrenar un modelo que separe la señal . En otras palabras, se busca 
+\begin{itemize}
+    \item Discusión de varios algoritmos, exponiendo sus pros y contras, y finalmente seleccionando uno para su implementación.
+\end{itemize}
+\begin{itemize}
+    \item Probar eficacia en una base real de señales EMG.
+\end{itemize}
+    \noindent Se espera que la señal separada del nervio incrementente considerablemente  A CONITINUAR
+\begin{itemize}
+    \item Explicar el uso y comportamiento del algortimo para el público menos técnico (ejemplo: manual de uso para profesionales sanitarios).
+\end{itemize}
+\noindent Los conceptos que se abordan en este Trabajo Fin de Grado, como técnicas de aprendizaje automático (\textit{Machine Learning}), estadística avanzada y procesado de señal, requieren una sólida base en ingeniería. No obstante, en el ámbito clínico cada vez es más común la utilización de herramientas tecnológicas basadas en estos principios, especialmente en áreas como la rehabilitación y el control neuromuscular mediante EMG. Por ello, en el trabajo explorará la necesidad de traducir deel funcionamiento del algoritmo a un lenguaje claro y práctico, facilitando su integración en entornos clínicios y garantizando un uso adecuado y seguro por parte de los especialistas.
 \chapter{Alineación con Objetivos de Desarrollo Sostenible}
-\href{Link}{https://sdgs.un.org/goals} \\
-3, 10, 16 + ...
+El análisis y separación de señales electromiográficas (EMG) que se desarrolla a lo a largo de este Trabajo Fin de Grado no solo buscar aportar avances en el ámbito del procesamiento de señales biomédicas, sino que también se integra de forma natural en varios Objetivos de Desarrollo Sostenible (también conocidos como \href{https://sdgs.un.org/goals}{ODS}). La aplicación de técnicas como preprocesamiento, la eliminación de artefactos y métodos de separación y clasificación contribuye al desarrollo de soluciones tecnológicas que mejoran la salud, impulsan la innovación y promueven la igualdad en el acceso a herramientas biomédicas. 
+
+Por ello, a continuación se mencionan los principales ODS que se persiguen y su papel en el Trabajo Fin de Grado:
+
+\begin{itemize}
+    \item Objetivo 3º: Salud y bienestar
+\end{itemize}
+La mejora en la calidad de las señales obtenidas permite evaluaciones clínicas más precisas, favorece la detección temprana de disfunciones musculares y optimiza los procesos de rehabilitación. El desarrollo de algoritmos más robustos y fiables incide directamente en la calidad de atención sanitaria, apoyando la toma de decisiones de profesionales en el área de la salud.
+\begin{itemize}
+    \item Objetivo 9º: Industria, innovación e infraestructura.
+\end{itemize}
+El proyecto impulsa la innovación tecnológica aplicando metodologías de ingeniería como el procesado digital de señales  y el aprendizaje automático a un contexto biomédico. La investigación y comparación de algoritmos de separación refuerza el desarrollo de nuevas herramientas que puede integrarse en dispositivos médicos, prótesis inteligentes o sistemas de monitorización avanzados. Por ello, el trabajo contribuye al fortalecimiento de infraestructuras científicas y tecnológicas orientadas a la mejora de la salud.
+\begin{itemize}
+    \item Objetivo 10º: Reducción de desigualdades
+\end{itemize}
+Al avanzar en técnicas que permiten obtener información muscular precisa sin emplear un equipamiento de alto coste,y por ello más accesible, este proyecto favorece que tecnologías basadas en EMG puedan extenderse a entornos clínicos y de investigación con menor disponibilidad de recursos. La estandarización de métodos de separación y su validación permiten reproducir de manera fiable, lo que facilita que estas herramientas se utilicen en una mayor variedad de centros. De este modo, el proyecto promueve un acceso más equitativo a tecnologías de prótesis, contribuyendo a la reducción de desigualdades en el ámbito sanitario.
 
 \chapter{Metodología del trabajo}
+En esta sección se expondrá la planificación del trabajo para su adecuada finalización. Se nombrarán los diferentes algoritmos de los que se dispone, pruebas que se realizarán y los procedimientos que sean pertinentes. Tras su explicación en detalle, se ilustrará con un cronograma o un diagrama de Gantt.
+\\La estrategia a seguir para este proyecto se basa en los siguientes pasos:
+\begin{itemize}
+    \item Preprocesamiento (en matlab)
+    \item Separación de señales (matlab/python)
+    \begin{itemize}
+    \item ICA (Separación a ciegas pura)
+    \begin{itemize}
+        \item FastICA
+        \item JADE
+        \item Infomax
+    \end{itemize}
+    \item Separación con referencia (ex: pre-TMR, musculo auxiliar ...)
+    \begin{itemize}
+        \item Kernel Constrained ICA
+        \item Correlation Constrained ICA
+        \item 2CFastICA (Kernel and Constrained)
+    \end{itemize} 
+\end{itemize}
+    \item Identificación del componente 
+    \item Análisis y validación
+\end{itemize}
 \input{Anexo B/gant.tex}
 \chapter{Recursos a emplear}
+Finalmente, en esta sección se presentan de manera detallada los recursos en los que se basará el desarrollo de este Trabajo Fin de Grado. Con esta sección se pretenede ofrecer una visión clara y transparente de las herrmientas que permitirán implementar, analizar y validar las distintas etapas del proyecto, desde el preprocesamiento de los datos hasta la ejecución de los algoritmos de separación. Se pretende así garantizar la reproducibilidad y coherencia metodológica del trabajo. 
+
+A continuación se mencionan, 
+
+\noindent\textbf{Python 3.9.13} \\
+\textit{Entorno de desarrollo:}
+\begin{itemize}
+    \item Visual Studio Code como entorno de programación y depuración.
+\end{itemize}
+\textit{Librerías empleadas:}
+\begin{itemize}
+    \item \textbf{scikit-learn}: Para preprocesamiento, normalización, PCA, métricas y evaluación de modelos.
+    \item \textbf{MNE-Python}: Para manejo de señales biomédicas, filtrado, visualización y estructuras de datos multicanal.
+    \item \textbf{Picard}: Implementación del algoritmo ICA con precondicionamiento y optimización natural, para separación de señales en entornos ruidosos.
+\end{itemize}
+
+\noindent\textbf{MATLAB 2022a} \\
+\textit{Entorno de trabajo:}
+\begin{itemize}
+    \item Editor integrado de MATLAB
+\end{itemize}
+\textit{Toolboxes y paquetes empleados:}
+\begin{itemize}
+    \item \textbf{Signal Processing Toolbox}: Para filtrado digital, análisis espectral y diseño de filtros.
+    \item \textbf{Statistics and Machine Learning Toolbox}: Para análisis estadístico, PCA y validación cuantitativa.
+    \item \textbf{FastICA package}: Paquete externo para la implementación del algoritmo FastICA como referencia comparativa.
+\end{itemize}
+
+\noindent\textbf{Gestión del Proyecto} 
+\begin{itemize}
+    \item \textbf{GitHub}: Sistema de control de versiones utilizado para el almacenamiento, seguimiento, documentación y evolución del código desarrollado en Python y MATLAB.
+    \item \textbf{Zotero}: Gestor bibliográfico empleado para la organización de artículos científicos, normativas, documentación y referencias citadas en la memoria.
+\end{itemize}
+
+\noindent\textbf{Redacción del Documento} 
+\begin{itemize}
+    \item \textbf{LaTeX (Overleaf)}: Plataforma principal para la edición colaborativa y compilación en LaTeX de la memoria del TFG. Incluye gestión de bibliografía mediante \texttt{BibTeX} integrada con Zotero.
+\end{itemize}
 
 
 \end{document}

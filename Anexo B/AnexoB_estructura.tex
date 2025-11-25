@@ -63,22 +63,29 @@
   {\normalfont\huge\bfseries}
   {\chaptername\ \thechapter}{10pt}{\Huge}
 \titlespacing*{\chapter}{0pt}{-60pt}{30pt}
+%Bibliografía 
+\addbibresource{referencias_anexoB.bib}
 
 \begin{document}
 
 \chapter*{Boceto Anexo B}
 \section*{1. Introducción}
-Esta sección detallará la contextualización del trabajo en el ámbito de la ingeniería de telecomunicaciones y sus posibles aplicaciones en otros campos, como la ingeniería biómedica.
+La ingeniería de telecomunicaciones desempeña un papel clave en el desarrollo de tecnologías basadas en la electrónica, la instrumentación y el procesamiento avanzado de señales. Uno de los campos emergentes donde estas disciplinas convergen es el ámbito de la ingeniería biomédica, concretamente en el análisis y procesado de señales fisiológicas para aplicaciones de rehabilitación y control de prótesis. (A expandir)
 \section*{2. Estado de la cuestión}
 Actualmente se dispone de una gran variedad de estudios que investigan los algoritmos de separación de señales y sus aplicaciones en ámbitos como imágenes, sonido e incluso señales EEG. No obstante, la implementación de estas técnicas en señales electromiográficas permanece relativamente poco explorada, a pesar de su potencial para ofrecer información valiosa sobre músculos reinervados.  (A expandir)
 \section*{3. Motivación}
+Cuando una persona pierde una extremidad, los nervios motores de la terminación quedan seccionados y, a menos que se reconecten, terminan formando "nervios dolorosos" (terminaciones nerviosas desorganizadas). Por ello, con el objetivo de mejorar la integración neuromuscular, se redirigen los nervios motores a músculos intactos que ya no tienen utilidad con el fin de que estos se conviertan en amplificadores biológicos para las señales. Este proceso se conoce como reinnervación muscular y es vital para la mejora del control en prótesis. No obstante, al hacer uso de músculos auxiliares como bioamplificadores, estos interaccionan con el nervio redirigido y modifican la forma y características de la señal emitida. (A expandir)
+
+Este trabajo Fin de Grado busca diseñar e implementar un algoritmo que sea capaz de identificar la señal del nervio, procesarla y separarla de la interacción del músculo auxiliar. De esta manera, se busca mejorar la precisión y robustez en el control de prótesis basadas en EMG.
+
 \section*{4. Objetivos del proyecto}
-A continuación se detallan los objetivos del Trabajao Fin de Grado, explicándose más a fondo en la versión final del Anexo B.  
+A continuación se detallan los objetivos del Trabajo Fin de Grado, explicándose más a fondo en la versión final del Anexo B.  
 \begin{itemize}
     \item Analizar y tratar la señal del músculo reinnervado.
-    \item Separación de la señal EMG, resultando en la señal del nervio y el músculo auxiliar
-    \item Discusión de varios algoritmos, exponiendo sus pros y contras, y finalmente seleccionando uno para 
-    \item Explicar el uso y comportamiento del algortimo para el público menos técnico (ejemplo: manual de uso para personal sanitario)
+    \item Separación de la señal EMG, resultando en la señal del nervio y del músculo auxiliar
+    \item Discusión de varios algoritmos, exponiendo sus pros y contras, y finalmente seleccionando uno para su implementación.
+    \item Probar eficacia en una base real de señales EMG.
+    \item Explicar el uso y comportamiento del algortimo para el público menos técnico (ejemplo: manual de uso para profesionales sanitarios).
     
 \end{itemize}
 
@@ -89,31 +96,40 @@ A continuación se detallan los objetivos del Trabajao Fin de Grado, explicándo
     \item Objetivo 9º: Industria, innovación e infraestructura.
 \item Objetivo 16º: Reducción de desigualdades
 \end{itemize}
+En la versión final se explicará el papel que desempeña este TFG en cada uno de los objetivos mencionados.
 \section*{6. Metodología del trabajo}
 En esta sección se expondrá la planificación del trabajo para su adecuada finalización. Se nombrarán los diferentes algoritmos de los que se dispone, pruebas que se realizarán y los procedimientos que sean pertinentes. Tras su explicación en detalle, se ilustrará con un cronograma o un diagrama de Gantt.
-\section*{7. Recursos empleados}
-Los recursos a emplear en este trabajo incluyen otros algoritmos existentes, así como lenguajes y herramientas de programación. Entre ellos se encuentran python, matlab, Github, Zotero...
-\\Los algoritmos más relevantes para este trabajo son los mencionados a continuación:
+\\La estrategia a seguir para este proyecto se basa en los siguientes pasos:
 \begin{itemize}
+    \item Preprocesamiento
+    \item Separación de señales
+    \begin{itemize}
     \item ICA (Separación a ciegas pura)
-    \item Constrained ICA (Referencia conocida)
     \begin{itemize}
-        \item Kernel Constrained
-        \item Correlation Constrained
-    \end{itemize} 
-    \item Non-linear 
-    \begin{itemize}
-        \item SOBI
-        \item Non-linear ICA
-        \item Convolutive ICA
+        \item FastICA
+        \item JADE
+        \item Infomax
     \end{itemize}
-    
+    \item Separación con referencia (ex: pre-TMR, musculo auxiliar ...)
+    \begin{itemize}
+        \item Kernel Constrained ICA
+        \item Correlation Constrained ICA
+        \item 2CFastICA (Kernel and Constrained)
+    \end{itemize} 
+\end{itemize}
+    \item Identificación del componente 
+    \item Análisis y validación
 \end{itemize}
 
-//
+
+Se detallará más a fondo su lógica y funcionamiento en la versión final del anexo B.
+\section*{7. Recursos empleados}
+fLos recursos a emplear en este trabajo incluyen otros algoritmos existentes, así como lenguajes y herramientas de programación. Entre ellos se encuentran python, matlab, Github, Zotero...
 
 A continuación se adjuntan referencias que posiblemente se emplearán a lo largo del proyecto:
+\cite{todd_kuiken_electromyography_2023, tang_improving_2025, naik_blind_2014, chen_2cfastica_2024, huang_performance_2025}
 
 
+\printbibliography
 
 \end{document}
