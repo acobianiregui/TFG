@@ -1,104 +1,88 @@
-% Paquete requerido: \usepackage{pgfgantt}
-
+% Paquetes requeridos: \usepackage{tikz}
 \begin{figure}[h!]
 \centering
-\begin{ganttchart}[
-    % Grid y estructura
-    hgrid,
-    vgrid={*6{draw=gray!30, line width=.75pt}},
-    % Dimensiones - MÁS ANCHO QUE ALTO
-    x unit=2.8cm,
-    y unit chart=0.7cm,
-    bar height=0.6,
-    group height=0.65,
-    milestone height=0.5,
-    % Estilos de títulos
-    title/.style={fill=black!10, draw=black!50, line width=0.5pt},
-    title label font=\bfseries\normalsize,
-    title height=1,
-    % Estilos de grupos
-    group/.style={fill=black!20, draw=black!60, line width=0.8pt, rounded corners=2pt},
-    group label font=\bfseries\footnotesize,
-    group left shift=0,
-    group right shift=0,
-    group peaks height=0.2,
-    group label node/.append style={anchor=east, xshift=-2mm},
-    inline,
-    % Estilos de barras
-    bar/.style={fill=blue!50, draw=blue!70, line width=0.6pt, rounded corners=1pt},
-    bar label font=\scriptsize,
-    bar label node/.append style={anchor=east, xshift=-2mm},
-    % Estilos de hitos
-    milestone/.style={fill=red!60, draw=red!80, line width=0.8pt},
-    milestone label font=\scriptsize\bfseries,
-    milestone label node/.append style={anchor=east, xshift=-2mm},
-    % Espaciado
-    bar top shift=0.15,
-    bar bottom shift=0.15
-]{1}{6}
+\begin{tikzpicture}[
+    % Estilos base
+    phase/.style={rectangle, rounded corners=2pt, minimum height=0.6cm, text width=2.8cm, align=center, font=\tiny\bfseries, draw, line width=0.6pt},
+    task/.style={rectangle, rounded corners=1pt, minimum height=0.5cm, text width=2.8cm, align=center, font=\tiny, draw, line width=0.4pt},
+    milestone/.style={diamond, minimum size=0.5cm, font=\tiny\bfseries, draw, line width=0.6pt, text width=1.5cm, align=center},
+    month/.style={font=\tiny\bfseries},
+    scale=0.85, transform shape
+]
 
-% Títulos principales
-\gantttitle{\textbf{Cronograma del TFG}}{6} \\
-\gantttitle[title/.style={fill=black!20, draw=black!60}]{2025}{6} \\
-\gantttitlelist{Ene,Feb,Mar,Abr,May,Jun}{1} \\[grid]
+% Título principal
+\node[font=\Large\bfseries] at (14.5, 7) {Cronograma del TFG - 2025-2026};
 
-% Fase 1
-\ganttgroup[
-    group/.append style={fill=blue!20, draw=blue!60}
-]{1. Investigación}{1}{1} \\
-\ganttbar[
-    bar/.append style={fill=blue!50, draw=blue!70}
-]{Revisión bibliográfica}{1}{1} \\[grid]
+% Línea temporal horizontal
+\draw[line width=1.5pt, -stealth] (0,5) -- (29,5);
 
-% Fase 2
-\ganttgroup[
-    group/.append style={fill=green!20, draw=green!60}
-]{2. Propuesta}{2}{2} \\
-\ganttbar[
-    bar/.append style={fill=green!50, draw=green!70}
-]{Redacción Anexo B}{2}{2} \\[grid]
+% Meses en la línea temporal
+\foreach \x/\month in {1/Sep, 4/Oct, 7/Nov, 10/Dic, 13/Ene, 16/Feb, 19/Mar, 22/Abr, 25/May, 28/Jun} {
+    \draw[line width=1pt] (\x,5) -- (\x,4.7);
+    \node[month] at (\x,4.3) {\month};
+}
 
-% Fase 3
-\ganttgroup[
-    group/.append style={fill=yellow!30, draw=yellow!70}
-]{3. Adquisición}{2}{3} \\
-\ganttbar[
-    bar/.append style={fill=yellow!60, draw=yellow!80}
-]{Preprocesamiento EMG}{2}{3} \\[grid]
+% Septiembre 2025: Fase 1 - Investigación
+\node[phase, fill=blue!20, draw=blue!60] (fase1) at (1, 3) {1. Investigación};
+\node[task, fill=blue!50, draw=blue!70, below=0.2cm of fase1] (tarea1) {Revisión bibliográfica};
+\draw[-stealth, blue!60, line width=1pt] (fase1.north) -- (1,4.7);
 
-% Fase 4
-\ganttgroup[
-    group/.append style={fill=orange!20, draw=orange!60}
-]{4. Análisis}{3}{4} \\
-\ganttbar[
-    bar/.append style={fill=orange!60, draw=orange!80}
-]{Implementación PCA/ICA}{3}{4} \\[grid]
+% Octubre 2025: Fase 2 - Propuesta
+\node[phase, fill=green!20, draw=green!60] (fase2) at (4, 3) {2. Propuesta};
+\node[task, fill=green!50, draw=green!70, below=0.2cm of fase2] (tarea2) {Redacción Anexo B};
+\draw[-stealth, green!60, line width=1pt] (fase2.north) -- (4,4.7);
 
-% Fase 5
-\ganttgroup[
-    group/.append style={fill=red!20, draw=red!60}
-]{5. Evaluación}{5}{5} \\
-\ganttbar[
-    bar/.append style={fill=red!50, draw=red!70}
-]{Validación de resultados}{5}{5} \\[grid]
+% Noviembre 2025: Fase 3 inicio
+\node[phase, fill=yellow!30, draw=yellow!70] (fase3a) at (7, 3) {3. Adquisición (inicio)};
+\node[task, fill=yellow!60, draw=yellow!80, below=0.2cm of fase3a] (tarea3a) {Preprocesamiento EMG};
+\draw[-stealth, yellow!70, line width=1pt] (fase3a.north) -- (7,4.7);
 
-% Fase 6
-\ganttgroup[
-    group/.append style={fill=purple!20, draw=purple!60}
-]{6. Documentación}{6}{6} \\
-\ganttbar[
-    bar/.append style={fill=purple!50, draw=purple!70}
-]{Redacción y defensa}{6}{6} \\[grid]
+% Diciembre 2025: Fase 3 continúa
+\node[phase, fill=yellow!30, draw=yellow!70] (fase3b) at (10, 3) {3. Adquisición (fin)};
+\draw[-stealth, yellow!70, line width=1pt] (fase3b.north) -- (10,4.7);
 
-% Hitos
-\ganttmilestone[
-    milestone/.append style={fill=orange!70, draw=orange!90, shape=diamond}
-]{Entrega Parcial}{4} \\
-\ganttmilestone[
-    milestone/.append style={fill=red!70, draw=red!90, shape=diamond}
-]{Defensa Final}{6}
+% Enero 2026: Fase 4 inicio
+\node[phase, fill=orange!20, draw=orange!60] (fase4a) at (13, 3) {4. Análisis (inicio)};
+\node[task, fill=orange!60, draw=orange!80, below=0.2cm of fase4a] (tarea4a) {Implementación PCA/ICA};
+\draw[-stealth, orange!60, line width=1pt] (fase4a.north) -- (13,4.7);
 
-\end{ganttchart}
-\caption{Cronograma del proyecto distribuido en seis fases mensuales durante el año 2025.}
-\label{fig:gantt}
+% Febrero 2026: Fase 4 continúa
+\node[phase, fill=orange!20, draw=orange!60] (fase4b) at (16, 3) {4. Análisis (fin)};
+\draw[-stealth, orange!60, line width=1pt] (fase4b.north) -- (16,4.7);
+
+% Marzo 2026: Fase 5 - Evaluación
+\node[phase, fill=red!20, draw=red!60] (fase5) at (19, 3) {5. Evaluación};
+\node[task, fill=red!50, draw=red!70, below=0.2cm of fase5] (tarea5) {Validación de resultados};
+\draw[-stealth, red!60, line width=1pt] (fase5.north) -- (19,4.7);
+
+% Abril 2026: Entrega Parcial
+\node[milestone, fill=orange!70, draw=orange!90] (hito1) at (22, 3) {};
+\node[font=\scriptsize\bfseries, text width=2.5cm, align=center] at (22, 2.2) {Entrega Parcial};
+\draw[-stealth, orange!90, line width=1.2pt, dashed] (hito1.north) -- (22,4.7);
+
+% Mayo 2026: Fase 6 - Documentación
+\node[phase, fill=purple!20, draw=purple!60] (fase6) at (25, 3) {6. Documentación};
+\node[task, fill=purple!50, draw=purple!70, below=0.2cm of fase6] (tarea6) {Redacción y defensa};
+\draw[-stealth, purple!60, line width=1pt] (fase6.north) -- (25,4.7);
+
+% Junio 2026: Defensa Final
+\node[milestone, fill=red!70, draw=red!90] (hito2) at (28, 3) {};
+\node[font=\scriptsize\bfseries, text width=2.5cm, align=center] at (28, 2.2) {Defensa Final};
+\draw[-stealth, red!90, line width=1.2pt, dashed] (hito2.north) -- (28,4.7);
+
+% Leyenda
+\node[font=\scriptsize, text width=14cm, align=left] at (14.5, -1) {
+    \textbf{Leyenda:} 
+    {\color{blue!60}$\blacksquare$} Investigación \quad
+    {\color{green!60}$\blacksquare$} Propuesta \quad
+    {\color{yellow!70}$\blacksquare$} Adquisición \quad
+    {\color{orange!60}$\blacksquare$} Análisis \quad
+    {\color{red!60}$\blacksquare$} Evaluación \quad
+    {\color{purple!60}$\blacksquare$} Documentación \quad
+    $\Diamond$ Hitos
+};
+
+\end{tikzpicture}
+\caption{Cronograma del proyecto en formato de línea temporal mostrando las seis fases desde septiembre 2025 hasta junio 2026, con los hitos principales.}
+\label{fig:chronogram}
 \end{figure}
