@@ -109,7 +109,27 @@ Con todo, este Trabajo Fin de Grado pretende centrarse en el desarrollo de algor
 
 \chapter{Estado de la cuestión}
 
-Artículos científicos publicados durante los últimos años han demostrado que los métodos de separación ciega de de fuentes (BSS), en concreto algoritmos basados en el Análisis de Componentes Independientes (ICA), ofrecen resultados prometedores en la separación de señales ocultas o mezcladas. Mientras que estos algoritmos han sido generalmente validados en campos con el procesamiento de audio, imágenes o señales de electronencefalograma (EEG)
+Artículos científicos publicados durante los últimos años han demostrado que los métodos de separación ciega de de fuentes (BSS), en concreto algoritmos basados en el Análisis de Componentes Independientes (ICA), ofrecen resultados prometedores en la separación de señales ocultas o mezcladas. Mientras que estos algoritmos han sido generalmente validados en campos con el procesamiento de audio, imágenes o señales de electronencefalograma (EEG).
+%IMAGENES DE EEG
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Anexo B/figuras/EEG_preICA.png}
+        \caption{Canales EEG pre-ICA}
+        \label{fig:1a}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.5\textwidth}
+        \centering
+        \includegraphics[height=0.15\textheight]{Anexo B/figuras/EEG_postICA.png}
+        \caption{Separaciones resultantes post-ICA}
+        \label{fig:1b}
+    \end{subfigure}
+    \caption{Aplicación de ICA en EEG, detallada por \textit{\cite{naik_blind_2014}}}
+    \label{fig:comparacion}
+\end{figure}
+
 
 No obstante, su aplicación en el ámbito de la electromiografía ha recibido una atención más limitada. Este hueco resulta especialmente relevante si se considera el creciente interés clínico por la evaluación de músculos reinervados, en los cuales la actividad de los nervios redirigidos presenta patrones alterados que podrían beneficiarse de métodos avanzados de separación de fuentes.
 
