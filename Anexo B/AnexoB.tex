@@ -99,17 +99,19 @@
 
 \section{Introducción}
 
-La ingeniería de telecomunicaciones desempeña un papel clave en el desarrollo de tecnologías basadas en la electrónica, la instrumentación y el procesamiento avanzado de señales. Uno de los campos emergentes donde estas disciplinas convergen es el ámbito de la ingeniería biomédica, concretamente en el análisis y procesamiento de señales fisiológicas para aplicaciones de rehabilitación y control de prótesis. (A expandir)
+La ingeniería de telecomunicaciones desempeña un papel clave en el desarrollo de tecnologías basadas en la electrónica, la instrumentación y el procesamiento avanzado de señales. Uno de los campos emergentes donde estas disciplinas convergen es el ámbito de la ingeniería biomédica, concretamente en el análisis y procesamiento de señales fisiológicas para aplicaciones de rehabilitación y control de prótesis. 
+%Hablar de la separación de señales en teleco
 
-Específicamente, el estudio de señales como el electromiograma (EMG) permite obtener información detallada sobre la actividad muscular, fundamental para comprender el funcionamiento del sistema neuromuscular, diseñar sistemas de asistencia y optimizar los procesos de rehabilitación. La correcta interpretación de estas señales depdende tanto de la adquisición precisa de los datos como del empleo de técnicas avanzadas de procesamiento, incluyendo extracción de características y algoritmos de separación de fuentes.
+Específicamente, el estudio de señales como el electromiograma (EMG) permite obtener información detallada sobre la actividad muscular, fundamental para comprender el funcionamiento del sistema neuromuscular, diseñar sistemas de asistencia y optimizar los procesos de rehabilitación. La correcta interpretación de estas señales depende tanto de la adquisición precisa de los datos como del empleo de técnicas avanzadas de procesamiento, incluyendo extracción de características y algoritmos de separación de fuentes.
 
-En este conet
+Adicionalmente, la separación de señales es una herramienta comúnmente aplicada en el mundo de las telecomunicaciones dada la creciente importancia de comunicaciones inalámbricas y radios inteligentes. En estas tecnologías, se dan ocasiones donde múltiples transmisores emiten señales en frecuencias cercanas que se solapan entre sí y otras interferencias y, en consecuencia, surge una necesidad de separar estas señales para poder recuperar la información deseada y monitorizar el espectro. No obstante, todas estas aplicaciones, a pesar de ser puramente de telecomunicaciones, contienen ideas valiosas que pueden ser aplicadas a señales biomédicas como EMG.
 
-Con todo, este Trabajo Fin de Grado pretende centrarse en el desarrollo de algoritmos de separación para señales EMG, con el objetivo de mejorar la calidad de las señales procesadas y facilitar su uso en entornos clínicos y de investigación. A su vez, el trabajo pretende demostrar la importancia de las telecomunciaciones en la ingeniería biomédica y como esta puede generar soluciones tecnológicas innovadoras que contribuyan a la salud y bienestar, potencien los dispositivos médicos y reduzcan barreras en el acceso a tecnologías avanzadas.
+Con todo, este Trabajo Fin de Grado pretende centrarse en el desarrollo de algoritmos de separación para señales EMG, con el objetivo de mejorar la calidad de las señales procesadas y facilitar su uso en entornos clínicos y de investigación. 
+
 
 \chapter{Estado de la cuestión}
 
-Artículos científicos publicados durante los últimos años han demostrado que los métodos de separación ciega de de fuentes (BSS), en concreto algoritmos basados en el Análisis de Componentes Independientes (ICA), ofrecen resultados prometedores en la separación de señales ocultas o mezcladas. Mientras que estos algoritmos han sido generalmente validados en campos con el procesamiento de audio, imágenes o señales de electronencefalograma (EEG).
+Artículos científicos publicados durante los últimos años han demostrado que los métodos de separación ciega de de fuentes (BSS), en concreto algoritmos basados en el Análisis de Componentes Independientes (ICA), ofrecen resultados prometedores en la separación de señales ocultas o mezcladas. Por lo general, su uso y validación es frecuente en campos como el procesamiento de audio, imágenes o señales de electronencefalograma (EEG). Concretamente en EEG es crucial emplear algún tipo de separación dada la mezcla de señales que se produce en el cerebro. 
 %IMAGENES DE EEG
 \begin{figure}[H]
     \centering
@@ -126,12 +128,14 @@ Artículos científicos publicados durante los últimos años han demostrado que
         \caption{Separaciones resultantes post-ICA}
         \label{fig:1b}
     \end{subfigure}
-    \caption{Aplicación de ICA en EEG, detallada por \textit{\cite{naik_blind_2014}}}
+    \caption{Aplicación de ICA en EEG, detallada por \textbf{\textit{\cite{naik_blind_2014}}}}
     \label{fig:comparacion}
 \end{figure}
 
 
-No obstante, su aplicación en el ámbito de la electromiografía ha recibido una atención más limitada. Este hueco resulta especialmente relevante si se considera el creciente interés clínico por la evaluación de músculos reinervados, en los cuales la actividad de los nervios redirigidos presenta patrones alterados que podrían beneficiarse de métodos avanzados de separación de fuentes.
+No obstante, su aplicación en el ámbito de la electromiografía ha recibido una atención más limitada. 
+
+Este hueco resulta especialmente relevante si se considera el creciente interés clínico por la evaluación de músculos reinervados, en los cuales la actividad de los nervios redirigidos presenta patrones alterados que podrían beneficiarse de métodos avanzados de separación de fuentes.
 
 Las señales EMG presentan características complejas, como naturaleza estacionaria y superposición de actividades de diferentes neuronas, dificultando su análisis mediante métodos convencionales. Estas particularidades son aun más importantes en músculos reinervados, donde la redirección de las neuronas produce patrones atípicos de activación y dándose una mayor variabilidad en los potenciales. Este comportamiento anómalo incrementa la dificultad para interpretar señales multicanal y refuerza la necesidad de técnicas capaces de descomponer mezclas en fuentes significativas.
 
@@ -139,7 +143,10 @@ En este contexto, diversos estudios han explorado la viabilidad de utilizar ICA 
 
 A pesar de estas limitaciones, el interés por el análisis avanzado de EMG ha aumentado de forma notable en los últimos años. Este crecimiento se observa especialmente en áreas como la rehabilitación neuromuscular, la monitorización de la reinervación tras lesiones periféricas, el control de prótesis y el estudio de trastornos del movimiento. Como consecuencia, han surgido numerosas investigaciones que evalúan distintas variantes de ICA y métodos relacionados, entre ellos FastICA, JADE o Infomax. Los resultados obtenidos muestran que la separación de fuentes puede complementar a las técnicas tradicionales, ofreciendo una caracterización más precisa de la actividad muscular y facilitando la identificación de patrones asociados a procesos de reinervación.
 
-En resumen, el estado actual de la investigación revela un campo , donde el uso de separación de señales EMG se encuentra en una fase emergente pero prometedora. La evidencia disponible podría sugerir que la separación de fuentes podría convertirse en una clave para mejorar evaluación clínica de músculos reinvervados y optimizar dispositivos médicos como prótesis. No obstante, existen desafíos que requieren una mayor investigación, especialmente en términos de robustez, reproducibilidad y validación fisiológica de los componentes obtenidos. \space \space \space
+En resumen, el estado actual de la investigación revela un campo , donde el uso de separación de señales EMG se encuentra en una fase emergente pero prometedora. La evidencia disponible podría sugerir que la separación de fuentes podría convertirse en una clave para mejorar evaluación clínica de músculos reinvervados y optimizar dispositivos médicos como prótesis.
+
+
+No obstante, existen desafíos que requieren una mayor investigación, especialmente en términos de robustez, reproducibilidad y validación fisiológica de los componentes obtenidos. \space \space \space
 %%%%%%%%%%%%%%
 
 %Actualmente, se dispone de una gran variedad de estudios que investigan los algoritmos de separación de señales y sus aplicaciones en ámbitos como imágenes, sonido e incluso señales EEG. No obstante, la implementación de estas técnicas en señales electromiográficas permanece relativamente poco explorada, a pesar de su potencial para ofrecer información valiosa sobre músculos reinervados.  (A expandir)
@@ -147,7 +154,15 @@ En resumen, el estado actual de la investigación revela un campo , donde el uso
 
 %La aplicación de algoritmos de separación de fuentes independientes (ICA y técnicas similares) puede permitir aislar componentes específicos, facilitando la evaluación de la función muscular, la monitorización de la recuperación tras lesiones o cirugías y 
 \chapter{Motivación}
-Cuando una persona pierde una extremidad, los nervios motores de la terminación quedan seccionados y, a menos que se reconecten, terminan formando "nervios dolorosos" (terminaciones nerviosas desorganizadas). Por ello, con el objetivo de mejorar la integración neuromuscular, se redirigen los nervios motores a músculos intactos que ya no tienen utilidad con el fin de que estos se conviertan en amplificadores biológicos para las señales. Este proceso se conoce como reinnervación muscular y es vital para la mejora del control en prótesis. No obstante, al hacer uso de músculos auxiliares como bioamplificadores, estos interaccionan con el nervio redirigido y modifican la forma y características de la señal emitida. (A expandir) %Feedback Romano?
+Cuando una persona pierde una extremidad, los nervios motores de la terminación quedan seccionados y, a menos que se reconecten, terminan formando "nervios dolorosos" (terminaciones nerviosas desorganizadas). Por ello, con el objetivo de mejorar la integración neuromuscular, se redirigen los nervios motores a músculos intactos que ya no tienen utilidad con el fin de que estos se conviertan en amplificadores biológicos para las señales. Este proceso se conoce como reinnervación muscular \textbf{\textit{Targeted Muscle Reinnervation (TMR)}} y es vital para la mejora del control en prótesis.
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{}
+    \caption{Caption}
+    \label{fig:placeholder}
+\end{figure}
+
+No obstante, al hacer uso de músculos auxiliares como bioamplificadores, estos interaccionan con el nervio redirigido y modifican la forma y características de la señal emitida. (A expandir) %Feedback Romano?
 
 Este trabajo Fin de Grado busca diseñar e implementar un algoritmo que sea capaz de identificar la señal del nervio, procesarla y separarla de la interacción del músculo auxiliar. De esta manera, se busca mejorar la precisión y robustez en el control de prótesis basadas en EMG.
 
@@ -171,7 +186,7 @@ A continuación, se presentan los objetivos generales y específicos que guiará
 \begin{itemize}
     \item Probar eficacia en una base real de señales EMG.
 \end{itemize}
-    \noindent Se espera que la señal separada del nervio incrementente considerablemente  A CONITINUAR
+    \noindent Por lo general, los algoritmos de separación de fuentes consiguen señales que maximicen su independencia entre si, pero en muchos casos resulta imposible recuperar las fuente originales.  Por ello, probablemente el objetivo más importante de este proyecto es evaluar la actuación del algoritmo desarrollado y considerar si sus resultados pueden conllevar una mejora sustancial en el manejo de prótesis.
 \begin{itemize}
     \item Explicar el uso y comportamiento del algortimo para el público menos técnico (ejemplo: manual de uso para profesionales sanitarios).
 \end{itemize}
@@ -193,7 +208,7 @@ El proyecto impulsa la innovación tecnológica aplicando metodologías de ingen
     \item Objetivo 10º: Reducción de desigualdades
 \end{itemize}
 Al avanzar en técnicas que permiten obtener información muscular precisa sin emplear un equipamiento de alto coste y, por ello,  más accesible. Este proyecto favorece que tecnologías basadas en EMG puedan extenderse a entornos clínicos y de investigación con menor disponibilidad de recursos. La estandarización de métodos de separación y su validación permiten su recreación de manera fiable, lo que facilita que estas herramientas se utilicen en una mayor variedad de centros. De este modo, el proyecto promueve un acceso más equitativo a tecnologías de prótesis, contribuyendo a la reducción de desigualdades en el ámbito sanitario.
-
+\clearpage
 \chapter{Metodología del trabajo}
 En esta sección se expondrá la planificación del trabajo para su adecuada finalización. Se nombrarán los diferentes algoritmos de los que se dispone, pruebas que se realizarán y los procedimientos que sean pertinentes. Tras su explicación en detalle, se ilustrará con un cronograma o un diagrama de Gantt.
 \\La estrategia a seguir para este proyecto se basa en los siguientes pasos:
@@ -242,11 +257,18 @@ Una vez mencionado y explicado , se debe organizar. Para ello, la mejor estrateg
 
 La figura que se muestra a continuación muestra el reparto temporal de las tareas del proyecto.
 %\input{Anexo B/gant.tex}
+
+\clearpage
+
 \chapter{Recursos a emplear}
+
 Finalmente, en esta sección se presentan de manera detallada los recursos en los que se basará el desarrollo de este Trabajo Fin de Grado. Con esta sección se pretende ofrecer una visión clara y transparente de las herramientas que permitirán implementar, analizar y validar las distintas etapas del proyecto, desde el preprocesamiento de los datos hasta la ejecución de los algoritmos de separación. Se pretende así garantizar la reproducibilidad y coherencia metodológica del trabajo. 
 
 A continuación se mencionan, 
 
+
+\noindent\includegraphics[height=1.2em]{Anexo B/figuras/python_logo.png}
+\hspace{0.5em}%
 \noindent\textbf{Python 3.11} \\
 \textit{Entorno de desarrollo:}
 \begin{itemize}
@@ -258,7 +280,8 @@ A continuación se mencionan,
     \item \textbf{MNE-Python}: Para manejo de señales biomédicas, filtrado, visualización y estructuras de datos multicanal.
     \item \textbf{Picard}: Implementación del algoritmo ICA con precondicionamiento y optimización natural, para separación de señales en entornos ruidosos.
 \end{itemize}
-
+\includegraphics[height=1.2em]{Anexo B/figuras/Matlab_Logo.png}
+\hspace{0.5em}%
 \noindent\textbf{MATLAB 2022a} \\
 \textit{Entorno de trabajo:}
 \begin{itemize}
@@ -276,7 +299,6 @@ A continuación se mencionan,
     \item \textbf{GitHub}: Sistema de control de versiones utilizado para el almacenamiento, seguimiento, documentación y evolución del código desarrollado en Python y MATLAB. A continuación se comparte un enlace al repositorio donde se subirán y gestionarám todos los archivos referentes al Trabajo Fin de Grado: \href{https://github.com/acobianiregui/TFG}{acobianiregui/TFG}
     \item \textbf{Zotero}: Gestor bibliográfico empleado para la organización de artículos científicos, normativas, documentación y referencias citadas en la memoria.
 \end{itemize}
-
 \noindent\textbf{Redacción del Documento} 
 \begin{itemize}
     \item \textbf{LaTeX (Overleaf)}: Plataforma principal para la edición colaborativa y compilación en LaTeX de la memoria del TFG. Incluye gestión de bibliografía mediante \texttt{BibTeX} integrada con Zotero.
