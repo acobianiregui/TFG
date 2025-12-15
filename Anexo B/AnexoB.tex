@@ -24,6 +24,27 @@
             bottom=2.54cm,
             left=2.54cm,
             right=2.54cm]{geometry}
+%Codigo
+\usepackage{listings} 
+\usepackage{minted}
+\usepackage{xcolor}
+\usepackage[final]{pdfpages}
+\usepackage{lipsum}
+\usepackage{changepage}
+\usepackage{xtab}
+\usepackage[most]{tcolorbox}
+\usepackage[shortlabels]{enumitem}
+\usepackage{matlab-prettifier} %Codigo matlab
+%Referencias 
+\usepackage{csquotes}
+\usepackage{xurl}
+\usepackage[
+    backend=biber,
+    sorting=ynt,
+    doi=true,
+    style=apa
+]{biblatex}
+\addbibresource{referencias.bib}
 
 %Links 
 \usepackage{hyperref} 
@@ -39,26 +60,12 @@
   pdftitle={TFG ACI},
   pdfpagemode=FullScreen
 }
-%Codigo
-\usepackage{listings} 
-\usepackage{minted}
-\usepackage{xcolor}
-\usepackage[final]{pdfpages}
-\usepackage{lipsum}
-\usepackage{changepage}
-\usepackage{xtab}
-\usepackage[most]{tcolorbox}
-\usepackage[shortlabels]{enumitem}
-\usepackage{matlab-prettifier} %Codigo matlab
-%Referencias 
-\usepackage{csquotes}
+% Penalidades para partir URLs
+\setcounter{biburllcpenalty}{100}
+\setcounter{biburlucpenalty}{100}
+\setcounter{biburlnumpenalty}{100}
 
-\usepackage[
-    backend=biber,
-    sorting=ynt,
-    style=apa
-]{biblatex}
-\addbibresource{referencias.bib}
+
 \fancyhf{} % Limpia encabezado
 
 % Cabecera 
@@ -133,37 +140,73 @@ Artículos científicos publicados durante los últimos años han demostrado que
 \end{figure}
 
 
-En este contexto, diversos estudios, como el publicado por \textbf{\textit{\cite{chen_2cfastica_2024}}}, han explorado la viabilidad de utilizar ICA para descomponer señales EMG multicanal y aislar componentes asociados a músculos individuales o grupos de unidades motoras. Estos trabajos muestran que la estructura de mezcla lineal de la sEMG, junto con la independencia relativa entre fuentes fisiológicas, convierte a ICA en un candidato adecuado para mejorar la interpretabilidad de las grabaciones. 
+En este contexto, diversos estudios, como el publicado por \textbf{\textit{\cite{chen_2cfastica_2024}}}, han explorado la viabilidad de utilizar ICA para descomponer señales EMG multicanal y aislar componentes asociados a músculos individuales o grupos de unidades motoras. Estos trabajos muestran que la estructura de mezcla lineal de la sEMG (EMG no invasivo), junto con la independencia relativa entre fuentes fisiológicas, convierte a ICA en un candidato adecuado para mejorar la capacidad de interpretación de las grabaciones. 
 
 No obstante, en poblaciones con reinervación, la independencia entre fuentes puede verse reducida debido a la reorganización de las conexiones motoras, lo que plantea nuevos retos metodológicos y explica la ausencia de un consenso claro.
 
-A pesar de estas limitaciones, el interés por el análisis avanzado de EMG ha aumentado de forma notable en los últimos años. Este crecimiento se observa especialmente en áreas como la rehabilitación neuromuscular, la monitorización de la reinervación tras lesiones periféricas, el control de prótesis y el estudio de trastornos del movimiento. Como consecuencia, han surgido numerosas investigaciones que evalúan distintas variantes de ICA y métodos relacionados, entre ellos FastICA, JADE o Infomax. Los resultados obtenidos muestran que la separación de fuentes puede complementar a las técnicas tradicionales, ofreciendo una caracterización más precisa de la actividad muscular y facilitando la identificación de patrones asociados a procesos de reinervación.
+A pesar de estas limitaciones, el interés por el análisis avanzado de EMG ha aumentado de forma notable en los últimos años. Este crecimiento se observa especialmente en áreas como la rehabilitación neuromuscular, la monitorización de la reinervación tras lesiones periféricas, el control de prótesis y el estudio de trastornos del movimiento. Muchas de estas investigaciones se inician en modelos de animales, especialmente conejos y ratas. 
 
-En resumen, el estado actual de la investigación revela un campo , donde el uso de separación de señales EMG se encuentra en una fase emergente pero prometedora. Los estudios actuales podrían indicar que la separación de fuentes podría convertirse en una clave para mejorar evaluación clínica de músculos reinvervados y optimizar dispositivos médicos como prótesis.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{Anexo B/figuras/EMG_rats.png}
+    \caption{Esquema del estudio realizado por \textbf{\textit{\cite{tang_improving_2025}}}.}
+    \label{fig:EMG_r}
+\end{figure}
+
+
+Como consecuencia, han surgido numerosas investigaciones que evalúan distintas variantes de ICA y métodos relacionados, entre ellos FastICA, JADE o Infomax. Los resultados obtenidos muestran que la separación de fuentes puede complementar a las técnicas tradicionales, ofreciendo una caracterización más precisa de la actividad muscular y facilitando la identificación de patrones asociados a procesos de reinervación.
+
+En resumen, el estado actual de la investigación revela un campo donde el uso de separación de señales EMG se encuentra en una fase emergente pero prometedora. Los estudios actuales podrían indicar que la separación de fuentes podría convertirse en una clave para mejorar evaluación clínica de músculos reinvervados y optimizar dispositivos médicos como prótesis.
  
 \clearpage
 \chapter{Motivación}
-Cuando una persona pierde una extremidad, los nervios motores de la terminación quedan seccionados y, a menos que se reconecten, terminan formando "nervios dolorosos" (terminaciones nerviosas desorganizadas). Por ello, con el objetivo de mejorar la integración neuromuscular, se redirigen los nervios motores a músculos intactos que ya no tienen utilidad con el fin de que estos se conviertan en amplificadores biológicos para las señales. Este proceso se conoce como reinnervación muscular o \textbf{\textit{Targeted Muscle Reinnervation (TMR)}} y es vital para la mejora del control en prótesis.
+Cuando una persona pierde una extremidad, los nervios motores de la terminación quedan seccionados y, a menos que se reconecten, terminan formando "nervios dolorosos" (terminaciones nerviosas desorganizadas). Por ello, con el objetivo de mejorar la integración neuromuscular, se redirigen los nervios motores a músculos intactos que ya no tienen utilidad con el fin de que estos se conviertan en amplificadores biológicos para las señales. Este proceso se conoce como reinervación muscular o \textbf{\textit{Targeted Muscle Reinervation (TMR)}} y es vital para la mejora del control en prótesis.
 \begin{figure}[H]
     \centering
     \begin{subfigure}[b]{0.4\textwidth}
         \centering
         \includegraphics[width=\textwidth, height=0.93\textwidth]{Anexo B/figuras/TMR_anterior.png}
         \caption{Visión anterior del esquema}
-        \label{fig:1a}
+        \label{fig:2a}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.45\textwidth}
         \centering
         \includegraphics[width=\textwidth]{Anexo B/figuras/TMR_posterior.png}
         \caption{Visión posterior del esquema}
-        \label{fig:1b}
+        \label{fig:2b}
     \end{subfigure}
     \caption{Esquema del plan quirúrgico para TMR en amputación transhumeral, representada por \textbf{\textit{\cite{cheesborough_targeted_2015}}}. Etiquetas del mismo color representan los músculos y su origen de inervación.}
-    \label{fig:comparacion}
+    \label{fig:comparacion2}
 \end{figure}
 
-Sin embargo, al hacer uso de músculos auxiliares como bioamplificadores, estos interaccionan con el nervio redirigido y modifican la forma y características de la señal emitida. Esto se debe a que el desvío del nervio introduce cambios en la geometría y densidad de las fuentes de las unidades motoras, afectando a la transferencia del potencial a través de tejidos y, en consecuencia, la forma temporal y espacial del potencial de acción \textit{(MUAP)}. Resumiendo, la señal EMG captada por los electrodos puede presentar retardos, variaciones en la amplitud y patrones de activaciones atípicas.
+Por otro lado, experimentalmente también se emplea ampliamente  los \textbf{ Regenerative Peripheral Nerve Interfaces (RPNI)}, donde se implanta un injerto muscular denervado y libre directamente al nervio afectado. Este injerto actúa como un amplificador focalizado y, en consecuencia, genera señales EMG de calidad superior y con mínima contaminación de músculos próximos.  (\textbf{\textit{\cite{vu_regenerative_2020}}})
+
+
+Sin embargo, al hacer uso de músculos auxiliares como bioamplificadores (sea RPNI o TMR), estos interaccionan con el nervio redirigido y modifican la forma y características de la señal emitida. Esto se debe a que el desvío del nervio introduce cambios en la geometría y densidad de las fuentes de las unidades motoras, afectando a la transferencia del potencial a través de tejidos y, en consecuencia, la forma temporal y espacial del potencial de acción \textit{(MUAP)}. Estas diferencias, respecto a la señal original, dificultan el procesamiento de la información del nervio y empeora la detección de activación, lo que potencialmente impacta el rendimiento de las prótesis.
+
+\clearpage
+
+El estudio conducido por \textbf{\textit{\cite{frost_regenerative_2018}}} entrena un modelo para la detección muscular en ratas a partir de una señal EMG rectificada para tanto músculo sano como reinervado. Como se puede observar, la figura \ref{fig:RPNI_C} muestra las áreas de detección nerviosa en un músculo de referencia o control, demostrando una identificación consistente de las activaciones. 
+No obstante, en la figura \ref{fig:RPNI_O} se puede apreciar que esta misma estrategia presenta un comportamiento diferente en el caso del músculo reinervado. A pesar de estar empleando RPNI, la morfología alterada de los MUAP provoca variaciones más pronunciadas e inconsistentes en los periodos de activación y reposo. Adicionalmente, las amplitudes (en milivoltios) experimentan una atenuación variable debido a la redistribución de las fuentes motoras.
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{Anexo B/figuras/RPNI_Control.png}
+    \caption{Análisis de la señal EMG de control a lo largo de 40 segundos.}
+    \label{fig:RPNI_C}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.52\linewidth]{Anexo B/figuras/RPNI.png}
+    \caption{Análisis de la señal EMG RPNI a lo largo de 40 segundos.}
+    \label{fig:RPNI_O}
+\end{figure}
+
+
+Resumiendo, la señal EMG captada por los electrodos puede presentar retardos, variaciones en la amplitud y patrones de activaciones atípicas.
 
 
 Por ello, surge la necesidad de este trabajo Fin de Grado, buscando diseñar e implementar un algoritmo que sea capaz de identificar la señal del nervio, procesarla y separarla de la interacción del músculo auxiliar. De esta manera, se busca mejorar la precisión y robustez en el control de prótesis basadas en EMG.
@@ -174,26 +217,27 @@ Para realizar este Trabajo Fin de Grado de manera satisfactoria, es crucial esta
 A continuación, se presentan los objetivos generales y específicos que guiarán el desarrollo del proyecto.
 
 \begin{itemize}
-    \item Analizar y tratar la señal del músculo reinnervado.
+    \item Analizar y tratar la señal del músculo reinervado.
  \end{itemize}   
     %Explicacion aqui
-    \noindent Cómo se mencionó en la sección introductoria de este documento, las señales de los músculos reinnervados se ven alterada por la interacción con el músculo auxiliar y, por lo tanto, sus características son considerablemente diferentes respecto a la señal de un músculo sano. Comprender las diferencias entre ambas señales en cuanto amplitud, frecuencia, fase será un aspecto clave para poder completar el trabajo.
+    \noindent Cómo se mencionó en la sección introductoria de este documento, las señales de los músculos reinervados se ven alteradas por la interacción con el músculo auxiliar y, por lo tanto, sus características son considerablemente diferentes respecto a la señal de un músculo sano. Comprender las diferencias entre ambas señales en cuanto amplitud, frecuencia, fase será un aspecto clave para poder completar el trabajo.
 \begin{itemize}
     \item Separación de la señal EMG, resultando en la señal del nervio y del músculo auxiliar
 \end{itemize}
-\noindent Una vez analizada la señal del músculo reinnervado e identificadas sus características, se puede emplear esta información para diseñar y entrenar un modelo que separe la señal . En otras palabras, se busca 
+\noindent Una vez analizada la señal del músculo reinervado e identificadas sus características, se puede emplear esta información para diseñar y entrenar un modelo que separe la señal . En otras palabras, se busca desarrollar un procedimiento capaz de distinguir que componentes $(S_1,S_2,S_3,.. S_n)$ pertenecen realmente al músculo reinervado y cuales provienen de músculos adyacentes.
 \begin{itemize}
     \item Discusión de varios algoritmos, exponiendo sus pros y contras, y finalmente seleccionando uno para su implementación.
 \end{itemize}
+Como se comentará en la sección de metodología, los diferentes métodos que se considerarán en el Trabajo Fin de Grado tienen sus características particulares, pudiendo funcionar mejor o peor dadas circunstancias específicas. En consecuencia, se debe probar y analizar los algoritmos para encontrar la combinación que mejor optimice la separación. 
 \begin{itemize}
     \item Probar eficacia en una base real de señales EMG.
 \end{itemize}
-    \noindent Por lo general, los algoritmos de separación de fuentes consiguen señales que maximicen su independencia entre si, pero en muchos casos resulta imposible recuperar las fuente originales.  Por ello, probablemente el objetivo más importante de este proyecto es evaluar la actuación del algoritmo desarrollado y considerar si sus resultados pueden conllevar una mejora sustancial en el manejo de prótesis.
+    \noindent Por lo general, los algoritmos de separación de fuentes consiguen señales que maximicen su independencia entre si, pero en muchos casos resulta imposible recuperar las fuentes originales con una precisión perfecta.  Por ello, probablemente el objetivo más importante de este proyecto es evaluar la actuación del algoritmo desarrollado y considerar si sus resultados pueden conllevar una mejora sustancial en el manejo de prótesis. Potencialmente, si se consigue un rendimiento adecuado, se podría plantear validar el  algoritmo en los datos obtenidos del estudio de \textbf{\textit{\cite{gonzalez-prieto_regenerative_2024}}}.
 \begin{itemize}
-    \item Explicar el uso y comportamiento del algortimo para el público menos técnico (ejemplo: manual de uso para profesionales sanitarios).
+    \item Explicar el uso y comportamiento del algoritmo para el público menos técnico (ejemplo: manual de uso para profesionales sanitarios).
 \end{itemize}
-\noindent Los conceptos que se abordan en este Trabajo Fin de Grado, como técnicas de aprendizaje automático (\textit{Machine Learning}), estadística avanzada y procesado de señal, requieren una sólida base en ingeniería. No obstante, en el ámbito clínico cada vez es más común la utilización de herramientas tecnológicas basadas en estos principios, especialmente en áreas como la rehabilitación y el control neuromuscular mediante EMG. Por ello, en el trabajo explorará la necesidad de traducir deel funcionamiento del algoritmo a un lenguaje claro y práctico, facilitando su integración en entornos clínicios y garantizando un uso adecuado y seguro por parte de los especialistas.
-\clearpage
+\noindent Los conceptos que se abordan en este Trabajo Fin de Grado, como técnicas de aprendizaje automático (\textit{Machine Learning}), estadística avanzada y procesado de señal, requieren una sólida base en ingeniería. No obstante, en el ámbito clínico cada vez es más común la utilización de herramientas tecnológicas basadas en estos principios, especialmente en áreas como la rehabilitación y el control neuromuscular mediante EMG. Por ello, en el trabajo explorará la necesidad de traducir del funcionamiento del algoritmo a un lenguaje claro y práctico, facilitando su integración en entornos clínicos y garantizando un uso adecuado y seguro por parte de los especialistas.
+
 \chapter{Alineación con Objetivos de Desarrollo Sostenible}
 El análisis y separación de señales electromiográficas (EMG) que se desarrolla a lo largo de este Trabajo Fin de Grado no solo busca aportar avances en el ámbito del procesamiento de señales biomédicas, sino que también se integra de forma natural en varios Objetivos de Desarrollo Sostenible (también conocidos como \href{https://sdgs.un.org/goals}{ODS}). La aplicación de técnicas como preprocesamiento, la eliminación de artefactos y métodos de separación y clasificación contribuye al desarrollo de soluciones tecnológicas que mejoran la salud, impulsan la innovación y promueven la igualdad en el acceso a herramientas biomédicas. 
 
@@ -213,7 +257,7 @@ El proyecto impulsa la innovación tecnológica aplicando metodologías de ingen
 Al avanzar en técnicas que permiten obtener información muscular precisa sin emplear un equipamiento de alto coste y, por ello,  más accesible. Este proyecto favorece que tecnologías basadas en EMG puedan extenderse a entornos clínicos y de investigación con menor disponibilidad de recursos. La estandarización de métodos de separación y su validación permiten su recreación de manera fiable, lo que facilita que estas herramientas se utilicen en una mayor variedad de centros. De este modo, el proyecto promueve un acceso más equitativo a tecnologías de prótesis, contribuyendo a la reducción de desigualdades en el ámbito sanitario.
 \clearpage
 \chapter{Metodología del trabajo}
-En esta sección se expondrá la planificación del trabajo para su adecuada finalización. Se nombrarán los diferentes algoritmos de los que se dispone, pruebas que se realizarán y los procedimientos que sean pertinentes. Tras su explicación en detalle, se ilustrará con un cronograma o un diagrama de Gantt.
+En esta sección se expondrá la planificación del trabajo para su adecuada finalización. Se nombrarán los diferentes algoritmos de los que se dispone, pruebas que se realizarán y los procedimientos que sean pertinentes. Tras su explicación en detalle, se ilustrará con un cronograma.
 \\La estrategia a seguir para este proyecto se basa en los siguientes pasos:
 \begin{itemize}
     \item Preprocesamiento (en matlab)
@@ -229,7 +273,7 @@ A continuación se detallan los tres grupos principales de algoritmos que se con
     \item []
     \begin{itemize}
         \item Separación de fuentes ciega \textit{(Blind Source Separation, BSS)}
-        \\ \noindent Esta técnica se basa en una estrategia fundamental de Machine Learning conocida como \textbf{\textit{Independent Component Analysis (ICA)}}, la cuál consiste en encontrar las señales subyacentes independientes a partir de una mezcla observada. Para aplicarse debe asumirse que las fuentes son estadísticamente independientes y que presentan distribuciones NO Gaussianas. Implementaciones famosas de este algoritmo son \textit{FastICA, Jade o Infomax}. S
+        \\ \noindent Esta técnica se basa en una estrategia fundamental de Machine Learning conocida como \textbf{\textit{Independent Component Analysis (ICA)}}, la cuál consiste en encontrar las señales subyacentes independientes a partir de una mezcla observada. Para aplicarse debe asumirse que las fuentes son estadísticamente independientes y que presentan distribuciones NO Gaussianas. Implementaciones famosas de este algoritmo son \textit{FastICA, Jade o Infomax}. (\textbf{\textit{\cite{shi_blind_2011}}})
     \end{itemize}
 \end{itemize}
 
@@ -240,6 +284,7 @@ A continuación se detallan los tres grupos principales de algoritmos que se con
         \\ \noindent Este enfoque se centra en la búsqueda de componentes basada en las diferencia en autocorrelación o estructuras temporales. El algoritmo más representativo en esta clasifiación es conocido como \textbf{\textit{SOBI (Second-Order Blind Identification)}}
     \end{itemize}
 \end{itemize}
+\clearpage
 \begin{itemize}
     \item[]
     \begin{itemize}
@@ -250,11 +295,12 @@ A continuación se detallan los tres grupos principales de algoritmos que se con
 \begin{itemize}
     \item Análisis y validación
 \end{itemize}
-Una vez separada las señales, es crucial reconocer e identificar cual de los componentes resultantes procede realmente de la señal de los nervios redirigidos frente a otros músculos. Para ello, se debe diseñar un procedimiento capaz de distinguir de manera fiable la fuente reinnervada y emplear métricas, como SNR o correlación, para valorar los resultados.
+Una vez separada las señales, es crucial reconocer e identificar cual de los componentes resultantes procede realmente de la señal de los nervios redirigidos frente a otros músculos. Para ello, se debe diseñar un procedimiento capaz de distinguir de manera fiable la fuente reinervada y emplear métricas, como SNR o correlación, para valorar los resultados.
+\\
 
-Una vez mencionado y explicado , se debe organizar. Para ello, la mejor estrategia es idear un cronograma que considere los pasos a seguir a lo largo del Trabajo Fin de Grado y su duración temporal estimada para poder garantizar un desarrollo progresivo y continuado. 
+Ahora que se ha detallado la estructura a seguir, es crucial organizar tiempo y recursos. Para ello, la mejor estrategia es idear un cronograma que considere los pasos a seguir a lo largo del Trabajo Fin de Grado y su duración temporal estimada para poder garantizar un desarrollo progresivo y continuado. 
 
-La figura que se muestra a continuación muestra el reparto temporal de las tareas del proyecto. Cabe destacar que esta organización es tentativa y puede sufrir cambios a medida que se avanza en el Trabajo Fin de Grado.
+La figura que se muestra a continuación muestra el reparto temporal de las tareas del proyecto. Cabe destacar que esta organización es orientativa y puede sufrir cambios a medida que se avanza en el Trabajo Fin de Grado.
 
 \begin{figure}[H]
     \centering
@@ -299,7 +345,7 @@ Finalmente, en esta sección se presentan de manera detallada los recursos en lo
 
 \noindent\textbf{Gestión del Proyecto} 
 \begin{itemize}
-    \item \textbf{GitHub}: Sistema de control de versiones utilizado para el almacenamiento, seguimiento, documentación y evolución del código desarrollado en Python y MATLAB. A continuación se comparte un enlace al repositorio donde se subirán y gestionarám todos los archivos referentes al Trabajo Fin de Grado: \href{https://github.com/acobianiregui/TFG}{acobianiregui/TFG}
+    \item \textbf{GitHub}: Sistema de control de versiones utilizado para el almacenamiento, seguimiento, documentación y evolución del código desarrollado en Python y MATLAB. A continuación se comparte un enlace al repositorio donde se subirán y gestionarán todos los archivos referentes al Trabajo Fin de Grado: \href{https://github.com/acobianiregui/TFG}{acobianiregui/TFG}
     \item \textbf{Zotero}: Gestor bibliográfico empleado para la organización de artículos científicos, normativas, documentación y referencias citadas en la memoria.
 \end{itemize}
 \noindent\textbf{Redacción del Documento} 
@@ -307,7 +353,13 @@ Finalmente, en esta sección se presentan de manera detallada los recursos en lo
     \item \textbf{LaTeX (Overleaf)}: Plataforma principal para la edición colaborativa y compilación en LaTeX de la memoria del TFG. Incluye gestión de bibliografía mediante \texttt{BibTeX} integrada con Zotero.
 \end{itemize}
 
-\nocite{*}
+
 \pagestyle{fancy}
+
+% Antes de \printbibliography:
+\begingroup
+\sloppy
+\raggedright
 \printbibliography
+\endgroup
 \end{document}
