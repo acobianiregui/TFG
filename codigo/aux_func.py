@@ -3,6 +3,7 @@
 import numpy as np
 import re
 import scipy.io as sio
+from scipy.optimize import linear_sum_assignment
 
 
 #Funciones para procesar datos y archivos
@@ -106,6 +107,42 @@ def eliminar_outiliers(emg, k=8.0):
     lo = med - k * mad
     hi = med + k * mad
     return np.clip(emg, lo, hi)
+##########################################################################################################################
+#Metricas
+def amari_error(W, A):
+    """
+    Amari error entre la matriz de separación W y la de mezcla A.
+    Invariante a escala, signo y permutación.
+    """
+    P = W @ A
+    P = np.abs(P)
+
+    n = P.shape[0]
+
+    row = np.sum(P, axis=1) - np.max(P, axis=1)
+    col = np.sum(P, axis=0) - np.max(P, axis=0)
+
+    return (row.sum() + col.sum()) / (2 * n)
+
+def corr_matrix(S_true, S_est):
+    C = np.zeros((2,2))
+    for i in range(2):
+        for j in range(2):
+            C[i,j] = np.corrcoef(S_true[i], S_est[j])[0,1]
+    return C
+def match_and_fix(S_true, S_est):
+    C = corr_matrix(S_true, S_est)
+    cost = 1 - np.abs(C)
+    rows, cols = linear_sum_assignment(cost)
+
+    S_al = S_est[cols, :].copy()
+    matched_corr = C[rows, cols]
+    signs = np.sign(matched_corr)
+    signs[signs == 0] = 1
+    S_al *= signs[:, None]
+
+    C_final = corr_matrix(S_true, S_al)
+    return S_al, C_final
 ##########################################################################################################################3
 #Funciones de SOBI
 def _sym_decorrelation(W: np.ndarray) -> np.ndarray:
@@ -209,24 +246,24 @@ def sobi(X, num_delays=50, delays=None, n_sources=None, eps=1e-7, max_sweeps=100
         n_sources = n_channels
     n_sources = int(n_sources)
 
-    # 1) Centrado (quita DC por canal)
+    #1 Centrado
     Xc = X - X.mean(axis=0, keepdims=True)
 
-    # 2) Blanqueo (PCA whitening)
+    #2 Whitening 
     R0 = (Xc.T @ Xc) / n_samples  # (ch,ch)
     d, E = np.linalg.eigh(R0)
     idx = np.argsort(d)[::-1]
     d = d[idx]
     E = E[:, idx]
 
-    # Reducir a n_sources y estabilizar
+    #3 Reducir al numero de fuentes indicado
     E = E[:, :n_sources]
     d = np.maximum(d[:n_sources], 1e-12)
 
-    Wh = np.diag(1.0 / np.sqrt(d)) @ E.T          # (src,ch)
-    Xw = Xc @ Wh.T                                 # (samples,src)
+    Wh = np.diag(1.0 / np.sqrt(d)) @ E.T          
+    Xw = Xc @ Wh.T                                
 
-    # 3) Matrices de autocovarianza a varios retardos (simetrizadas)
+    #3 Matrices de covarianza retardada
     if delays is None:
         delays = list(range(1, int(num_delays) + 1))
 
@@ -241,14 +278,12 @@ def sobi(X, num_delays=50, delays=None, n_sources=None, eps=1e-7, max_sweeps=100
     if len(mats) == 0:
         raise ValueError("No hay retardos válidos. Ajusta num_delays/delays.")
 
-    # 4) Diagonalización conjunta (AJD)
-    # Copia para no mutar 'mats' original en AJD
-    mats_copy = [A.copy() for A in mats]
+    #4 Diagonalización conjunta 
+    mats_copy = [A.copy() for A in mats] #Copia para no modificar los originales
     B = _joint_diag_jacobi(mats_copy, eps=eps, max_sweeps=max_sweeps)  # (src,src)
     B = _sym_decorrelation(B)
 
-    # 5) Separación
-    # Separador total: W (src,ch) tal que S = Xc @ W.T
+    #5 Separación
     W = B @ Wh
     S = Xc @ W.T
 
