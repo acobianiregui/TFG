@@ -143,6 +143,49 @@ def match_and_fix(S_true, S_est):
 
     C_final = corr_matrix(S_true, S_al)
     return S_al, C_final
+import numpy as np
+
+def correlacion_cruzada(x, y, max_lag): #PARA SOBII!!!!!!!!!!!!!
+    """
+    Correlación cruzada normalizada entre x e y.
+
+    Parametros
+    ----------
+    x, y : array
+        Señales de misma longitud
+    max_lag : int
+        Retardo maximo
+
+    Deuvelve
+    -------
+    lags : np.array
+        Retardos (en muestras), de -max_lag a +max_lag
+    rxy : np.array
+        Correlación cruzada normalizada
+    """
+    x = np.asarray(x).ravel()
+    y = np.asarray(y).ravel()
+
+    if len(x) != len(y):
+        raise ValueError("x e y deben tener la misma longitud")
+
+    #centrar
+    x = x - np.mean(x)
+    y = y - np.mean(y)
+
+    #correlación cruzada completa
+    r = np.correlate(x, y, mode="full")
+
+    # normalización tipo Pearson
+    r = r / (np.std(x) * np.std(y) * len(x))
+
+    mid = len(r) // 2
+    lags = np.arange(-len(x) + 1, len(x))
+
+    idx = slice(mid - max_lag, mid + max_lag + 1)
+
+    return lags[idx], r[idx]
+
 ##########################################################################################################################3
 #Funciones de SOBI
 def _sym_decorrelation(W: np.ndarray) -> np.ndarray:
@@ -250,7 +293,7 @@ def sobi(X, num_delays=50, delays=None, n_sources=None, eps=1e-7, max_sweeps=100
     Xc = X - X.mean(axis=0, keepdims=True)
 
     #2 Whitening 
-    R0 = (Xc.T @ Xc) / n_samples  # (ch,ch)
+    R0 = (Xc.T @ Xc) / n_samples  
     d, E = np.linalg.eigh(R0)
     idx = np.argsort(d)[::-1]
     d = d[idx]
