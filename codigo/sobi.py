@@ -1,4 +1,6 @@
 #sobi.py
+import numpy as np
+
 def _sym_decorrelation(W: np.ndarray) -> np.ndarray:
     """Symmetric decorrelation: W <- (W W^T)^(-1/2) W."""
     s, U = np.linalg.eigh(W @ W.T)

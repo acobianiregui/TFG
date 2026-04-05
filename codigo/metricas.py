@@ -1,7 +1,7 @@
 #metricas.py
 import numpy as np
 from scipy.optimize import linear_sum_assignment
-from evaluacion import *
+
 #Metricas
 def amari_error(W, A):
     """
@@ -94,6 +94,30 @@ def correlacion_cruzada(x, y, max_lag): #PARA SOBII!!!!!!!!!!!!!
     idx = slice(mid - max_lag, mid + max_lag + 1)
 
     return lags[idx], r[idx]
+
+def safe_corr(x, y, eps=1e-12):
+    x = np.asarray(x).ravel()
+    y = np.asarray(y).ravel()
+
+    if len(x) != len(y):
+        raise ValueError("x e y deben tener la misma longitud")
+
+    #quitar media (ya esta del preprocesamiento pero por si acaso)
+    x = x - np.mean(x)
+    y = y - np.mean(y)
+
+    #desv stndard
+    sx = np.std(x)
+    sy = np.std(y)
+
+    #evitar indeterminaciones
+    if sx < eps or sy < eps:
+        return 0.0
+
+    corr = np.dot(x, y) / (len(x) * sx * sy)
+
+    #clip por si acaso
+    return np.clip(corr, -1.0, 1.0)
 ########################################################################################################################
 #RMS
 def rms(x): 
@@ -155,6 +179,43 @@ def moving_rms(x, win_samples, step_samples=None):
         return np.array([0.0])
 
     return np.asarray(vals)
+
+def rms_envelope(x, win_samples, step_samples=None):
+    """
+    Calcula la envolvente RMS de una señal usando ventanas deslizantes.
+
+    Parameters
+    ----------
+    x : array-like
+        Señal 1D
+    win_samples : int
+        Tamaño de ventana en muestras
+    step_samples : int or None
+        Paso entre ventanas (default = win_samples, sin solape)
+
+    Returns
+    -------
+    env : ndarray
+        Envolvente RMS
+    """
+    x = np.asarray(x).ravel()
+
+    if step_samples is None:
+        step_samples = win_samples
+
+    if win_samples <= 0 or step_samples <= 0:
+        raise ValueError("win_samples y step_samples deben ser positivos")
+
+    env = []
+
+    for start in range(0, len(x) - win_samples + 1, step_samples):
+        segment = x[start:start + win_samples]
+        env.append(np.sqrt(np.mean(segment**2)))
+
+    if len(env) == 0:
+        return np.array([0.0])
+
+    return np.array(env)
 def rms_envelope_metrics(x_true, x_est, fs=1000, window_ms=150, step_ms=50):
     """
     Calcula métricas sobre la envolvente RMS:

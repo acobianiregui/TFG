@@ -2,6 +2,7 @@
 import numpy as np
 from sklearn.decomposition import FastICA
 from metricas import *
+from metricas import safe_corr
 import pandas as pd
 #RUN algortimos
 
@@ -50,6 +51,37 @@ def align_estimated_to_true(S_est, S_true):
             best_S = S_tmp
 
     return best_S
+
+
+def align_sources(S_est, S_true):
+    """
+    Reordena y corrige signo de las fuentes estimadas
+    para maximizar correlación con las verdaderas.
+    """
+    perms = [[0, 1], [1, 0]]
+
+    best = None
+    best_score = -1
+
+    for p in perms:
+        S = S_est[:, p].copy()
+        score = 0
+
+        for i in range(2):
+            c = safe_corr(S[:, i], S_true[:, i])
+
+            if c < 0:
+                S[:, i] *= -1
+                c = -c
+
+            score += c
+
+        if score > best_score:
+            best_score = score
+            best = S
+
+    return best
+
 
 def evaluate_method(name, S_hat, S_true, fs=1000, window_ms=150, step_ms=50):
     """
@@ -133,3 +165,4 @@ def comparar_rms_ventanas(x, y, fs, window_ms=150, step_ms=50):
     corr = np.corrcoef(rms_x, rms_y)[0,1]
 
     return rms_x, rms_y, corr
+
