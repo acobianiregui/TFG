@@ -26,16 +26,22 @@ ICA is originally formulated for linear and instananeous mixing models. Let $s(t
 
 
 \subsection{Assumptions of ICA}
-Before jumping into mathematical derivations. 
+
+Before jumping into mathematical derivations
+
 \subsection{ICA derivation (2D)}
-\begin{figure}[htbp]
+
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{figuras/ICA_geometry.png}
-    \caption{Geometric interpretation of ICA in the 2D case. The observed mixtures are first decorrelated and normalized through whitening (PCA + variance normalization), transforming the data distribution into a spherical shape. The remaining transformation corresponds to a rotation that recovers statistically independent components.}
+    \includegraphics[height=6cm, width=0.3\textwidth]{figuras/ICA_geometry.png}
+    \caption{Geometric interpretation of ICA in the 2D case. The observed mixtures are decorrelated with PCA (first step) and normalized (second step). Once the data is whitened the final step corresponds to the rotation that best recovers the statistically independent sources. Figure was created using the Microsof Visio tool.} 
     \label{fig:ica_whitening}
 \end{figure}
 
 \subsection{Implementations: FastICA}
+
+Though the ICA process is straight forward, the final transformation matrix may be computationally expensive to find, given that it requires maximizing kurtosis. 
+
 \subsection{Weak-source and noise}
 \section{Second-Order Blind Identification (SOBI)}
 \section{Constrained(ICA)}
