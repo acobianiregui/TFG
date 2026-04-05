@@ -7,9 +7,13 @@
 \usepackage{amsmath, amsfonts, amssymb} 
 \usepackage{fancyhdr} 
 \usepackage{titlesec}
+\usepackage{amssymb}
+\usepackage{array}
 \usepackage{graphicx} 
 \usepackage{booktabs} 
 \usepackage{float}
+\usepackage{pifont}
+\usepackage{tabularx}
 \usepackage{caption}
 \captionsetup[table]{labelformat=simple} % Aqui para la nomenclatura de las tablas
 %Plots / señales... 
@@ -18,12 +22,13 @@
 \usepackage{subcaption} %Subfiguras
 
 %Margenes
-\usepackage[a4paper,
-            top=2.54cm,
-            bottom=2.54cm,
-            left=2.54cm,
-            right=2.54cm]{geometry}
-
+%\usepackage[a4paper,
+%            top=2.54cm,
+%            bottom=2.54cm,
+%            left=2.54cm,
+%            right=2.54cm]{geometry}
+\usepackage[a4paper,top=2.54cm
+            ]{geometry}
 %Links 
 \usepackage{hyperref} 
 \hypersetup{
@@ -59,7 +64,9 @@
 ]{biblatex}
 \addbibresource{referencias2.bib}
 \fancyhf{} % Limpia encabezado
-
+\renewcommand{\chaptermark}[1]{%
+  \markboth{\thechapter.\ #1}{}%
+}
 % Cabecera 
 \fancyhead[L]{\includegraphics[height=25pt]{imagenes/comillas_icai_logo.jpeg}}          
 \fancyhead[C]{\leftmark}        
@@ -80,28 +87,30 @@
 \usepackage{listings}
 \usepackage{xcolor}
 
-
-
-
-\title{TFG}
-\author{anton.cobian.iregui }
-\date{July 2025}
-
 \begin{document}
-
-\input{Secciones/portada}
-
+\pagestyle{empty} 
+\input{portada}
+\clearpage
+\input{latex/autorizacion}
+\clearpage
+\input{latex/digitalizacion}
+\clearpage
+\input{latex/anexoI}
+\clearpage
+\input{latex/portada}
+\clearpage
+\input{latex/resumen}
+\clearpage
+\input{latex/abstract}
+\clearpage
+\tableofcontents
 \pagestyle{fancy}
-
-\tableofcontents 
-
+\include{latex/Introduccion}
 \clearpage
-
-\section{Introduction}
-\include{Secciones/cap1}
-
+\include{latex/Estado del arte}
 \clearpage
-
+\include{latex/Metodologia}
+\clearpage
 \printbibliography
 
 \end{document}
