@@ -1,8 +1,8 @@
 #visulizacion.py
 import matplotlib.pyplot as plt
 import numpy as np
-from src import metricas
-from src import sobi
+from src.metricas import *
+from src.sobi import *
 
 def plot_autocoralacion(s1, s2,lags,print_val=False):
     """
