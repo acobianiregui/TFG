@@ -1,6 +1,7 @@
 #constrained_ica.py
 import numpy as np
-
+from sobi import _sym_decorrelation
+from preprocesamiento import whiten
 def g_fun(U, fun="logcosh", alpha=1.0):
     if fun == "logcosh":
         G = np.tanh(alpha * U)
@@ -107,7 +108,7 @@ def constrained_fastICA(
     #inicialización (aleatorio)
     W = rng.standard_normal((n_components, p))
     #decorrelacionamos
-    W = sym_decorrelation(W, eps=eps)
+    W = _sym_decorrelation(W, eps=eps)
 
     for _ in range(max_iter):
         W_old = W.copy()
@@ -134,7 +135,7 @@ def constrained_fastICA(
         W_new[k] = wk
 
         #decorrelación simetrica
-        W_new = sym_decorrelation(W_new, eps=eps)
+        W_new = _sym_decorrelation(W_new, eps=eps)
 
         #volver a proyectar la componenente restringida
         if q is not None and hard_ref:
@@ -143,7 +144,7 @@ def constrained_fastICA(
             norm_wk = np.linalg.norm(wk)
             if norm_wk > eps:
                 W_new[k] = wk / norm_wk
-            W_new = sym_decorrelation(W_new, eps=eps)
+            W_new = _sym_decorrelation(W_new, eps=eps)
 
         lim = np.max(np.abs(np.abs(np.diag(W_new @ W_old.T)) - 1.0))
         W = W_new
