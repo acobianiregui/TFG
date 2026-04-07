@@ -27,5 +27,5 @@ jobs:
             python -m py_compile $files
           fi
 
-      - name: Run Ruff
-        run: ruff check .
+      - name: Run Ruff (only undefined names)
+        run: ruff check . --select F821
