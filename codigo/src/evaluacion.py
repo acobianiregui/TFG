@@ -1,8 +1,7 @@
 #evaluacion.py
 import numpy as np
 from sklearn.decomposition import FastICA
-from metricas import *
-from metricas import safe_corr
+from src.metricas import *
 import pandas as pd
 #RUN algortimos
 

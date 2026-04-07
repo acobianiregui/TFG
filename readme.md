@@ -20,26 +20,28 @@ Esto permitirá mejorar la precisión en el control de prótesis y en interfaces
 
 ## 📂 Estructura del repositorio
 ```
-project
-│ README.md
-│ main.tex
-│ referencias.bib
-│ TFG.pdf
+TFG/
+├── codigo/ # Code for experiments and algorithms
+│ ├── src/ # Core implementations (ICA, SOBI, preprocessing, metrics...)
+│ ├── notebooks/ # Experiments and testing
+│ ├── tools/ # Utility scripts
+│ └── ...
 │
-└───Secciones
-│ │ portada.tex
-│ │ cap1.tex
-│ │ ...
+├── latex/ # Thesis (LaTeX source)
+│ ├── main.tex
+│ ├── Secciones/
+│ ├── anexos/
+│ └── ...
 │
-└───Codigos
-│ └───
-│ │ │ codigo1.m
-│ │ │ ...
-│ └───OTROS
-│ │ ...
+├── figuras/ # Figures used in thesis
+├── imagenes/ # Additional images/assets
 │
-└───AnexoB
-│ ...
+├── presentacion_seguimiento/ # Presentation slides
+├── recursos/ # Papers and references
+│
+├── .github/ # CI workflows
+├── README.md
+└── LICENSE
 ```
 ---
 
