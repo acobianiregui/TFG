@@ -1,11 +1,14 @@
-\chapter{Metodologia}
+\chapter{Methodology}
 
 \section{Problem modeling}
+For simplification s1 es colgajo y s2
+
 \subsection{General model}
 \subsection{Symmetric attenuation}
+\label{subsec:Assymetric attenuation}
 \subsection{Weak-source regime}
 \clearpage
-\section{Preprocesamiento}
+\section{Preprocessing}
 \subsection{Filtering}
 \subsubsection{Filter desing}
 \subsection{Normalization}
@@ -49,7 +52,7 @@ The ICA framework relies on a set of assumptions that ensure the identifiability
 
 \begin{itemize}
 
-\item \textbf{Statistical independence} $\rightarrow p(s_1,s_2)=p(s_1)p(s_2)$ \\ \\
+\item \textbf{Statistical independence} $\rightarrow p(s_1,s_2,...,s_n)=p(s_1)p(s_2)...p(s_n)$ \\ \\
 The source signals $s_i(t)$ are assumed to be mutually independent. This is the key assumption of ICA, as the separation is achieved by maximizing statistical independence between the estimated components.
 
 \item \textbf{Non-Gaussianity} \\
@@ -74,6 +77,8 @@ The number of observed mixtures must be greater than or equal to the number of s
 In practice, these assumptions are only approximately satisfied, particularly in biomedical applications such as EMG signal processing. For example, sources may show partial statistical dependence, the mixing process may include delays and measurements are typically affected by noise. These non-idealities from real world applications can significantly impact the performance of ICA-based methods.
 
 \subsection{ICA derivation (2D)}
+
+
 To gain further understanding of the ICA process, a geometric and mathematical derivation is presented in the two-dimensional case, which corresponds to the specific model analyzed in this work.
 
 Let $\begin{pmatrix}
@@ -96,11 +101,70 @@ $, where $x_1(t)$ and $x_2(t)$ are coordinates of $X(t)$ in $\mathbb{R}^2$. Sinc
     \mathbf{A} = \mathbf{U} \mathbf{\Sigma} \mathbf{V}^T
 \end{equation}
 
-\noindent where $\mathbf{V}^T$ represents a rotation of the source signals, $\mathbf{\Sigma}$ applies a scaling along the principal directions, and $\mathbf{U}$ corresponds to a final rotation in the observation space.
+\noindent where $\mathbf{V}^T$ represents a rotation of the source signals, $\mathbf{\Sigma}$ applies a scaling along the principal directions and $\mathbf{U}$ corresponds to a final rotation in the observation space.
 
-Given the current decomposition, it is possible to estimate the separating matrix $W=A^{-1}=V\Sigma^{-1}U^{T}$ \footnote{Recall that rotation the inverse of rotation matrices correspond to t} which can be statistically estimated from the mixtures signals. 
+This decomposition is useful for interpreting the geometry behind the mixing process. However, since the mixing matrix is still unknown, ICA does not estimate these factors directly. Instead, it uses the statistical properties of the observations to recover an equivalent geometric transformation.
 
-Given this decomposition it is trivial to express $\mathbf{W}$
+The first step towards recovering the sources consists of compensating for the transformations associated with $\textbf{U}$ and $\mathbf{\Sigma}$. %This can be done by projecting the signals onto their principal axes and later normalizing each axis by its standard deviation.
+The effect associated with \textbf{U} can be interpreted as a rotation in the 2D space, which can be parameterized by an angle $\mathbf{\phi}$. Therefore, assuming data has been centered \footnote{$Var(y)=\mathbb{E}[y^2]-E[y]^2$, but since data is zero mean, $Var(y)=\mathbb{E}[y^2]$}, the variance of the observations projected onto that direction can be expressed as shown in equation \eqref{eq:var_phi} and the principal axis is obtained by selecting the angle that maximizes it \eqref{eq:phi_star}. 
+
+\begin{equation}
+\mathrm{Var}(\phi)=\frac{1}{N}\sum_{j=1}^{N}
+\left(
+\begin{bmatrix}
+x_1(j) & x_2(j)
+\end{bmatrix}
+\begin{bmatrix}
+\cos\phi\\
+\sin\phi
+\end{bmatrix}
+\right)^2
+\label{eq:var_phi}
+\end{equation}
+%%%%%% Angulo de maxima varianza
+\begin{equation}
+\phi^\star = \arg\max_{\phi}\,\mathrm{Var}(\phi)
+\label{eq:phi_star}
+\end{equation}
+
+Once the data has been rotated onto its principal axes, each component still has its own variance. These variances correspond to the eigenvalues of the covariance matrix and represent the scaling introduced by $\mathbf{\Sigma}$.  To remove this effect, each component is normalized by its standard deviation, that is, 
+\begin{equation}
+    z_i(j)=\frac{y_i(j)}{\sqrt{\lambda_i}}, \qquad \forall i=1,2 
+\end{equation}
+\noindent where $y_i$ expresses the $i-th$ component after projection onto the axis and $\lambda_i $ is the corresponding eigenvalue. In matrix form, the combination of the rotation onto the principal directions and the posterior variance normalization can be written as
+\begin{equation}
+    z= \Lambda^{-1/2}E^T x = \Sigma^{-1}U^{-T}x
+    \label{eq:whitening_transform}
+\end{equation}
+The transformation in equation \eqref{eq:whitening_transform} is known as whitening, since it produces a new representation whose components are uncorrelated and have unit variance.
+
+After whitening, the observed vector is reduced to a rotated version of the original sources. For this reason, the only remaining transformation is an orthogonal rotation. In the 2D case, this transformation can be represented by a single angle  $\theta$, such that 
+\begin{equation}
+\mathbf{y} = \mathbf{R}(\theta)\mathbf{z}
+\label{eq:final_rotation}
+\end{equation}
+where $\mathbf{R}(\theta)$ is the rotation matrix 
+\begin{equation}
+\mathbf{R}(\theta)=
+\begin{bmatrix}
+\cos\theta & -\sin\theta\\
+\sin\theta & \cos\theta
+\end{bmatrix}.
+\label{eq:rotation_matrix}
+\end{equation}
+Since the whitening step already guarantees that the components in the 2D space are uncorrelated and have unit variance, second-order statistics no longer provide information to determine the correct orientation. Therefore, ICA relies on higher-order statistics. The most typical criterion is kurtosis, which is defined as
+\begin{equation}
+\mathrm{kurt}(y)=\mathbb{E}[y^4]-3\left(\mathbb{E}[y^2]\right)^2
+\label{eq:kurtosis}
+\end{equation}
+For unit-variance data, kurtosis is simplified to $kurt(y)=\mathbb{E}[y^4]-3.$ Therefore the final ICA solution can be interpreted as the rotation angle $\theta$ that maximizes kurtosis of the projected signal:
+\begin{equation}
+\theta^\star=\arg\max_{\theta}\left|\mathrm{kurt}(y_{\theta})\right|
+\label{eq:theta_star_kurt}
+\end{equation}
+
+Overall, the whole ICA process can be interpreted as the estimation of a series of geometric transformations by using the statistical properties of the observed mixtures. In the 2D case specifically, the transformations can be explained graphically as shown in figure \ref{fig:ica_geometry}.
+
 \begin{figure}[H]
     \centering
     \includegraphics[height=6.5cm, width=0.35\textwidth]{figuras/ICA_geometry.png}
@@ -113,7 +177,131 @@ Given this decomposition it is trivial to express $\mathbf{W}$
 Though the ICA process is straight forward, the final transformation matrix may be computationally expensive to find, given that it requires maximizing kurtosis. 
 
 \subsection{Weak-source and noise}
-Even tough ICA's process may seem 
+In the context of this study, one of the main difficulties does not come only from the mixing itself, but from the fact that the target component may be significantly weaker than the interfering source. Under noise conditions, source separation becomes more challenging, since the contribution of the weaker signal to the observed mixtures may be partially masked by both the dominant component and the additive noise. For this reason, it is crucial to analyze how weak-source conditions and noise affect the identifiability and practical recovery of the signals.
+
+Consider the noisy mixing model
+\begin{equation}
+\mathbf{x}=\mathbf{A}\mathbf{s}+\mathbf{n},
+\qquad
+\mathbf{A}=
+\begin{bmatrix}
+a_{11} & a_{12}\\
+a_{21} & a_{22}
+\end{bmatrix},
+\label{eq:weak_noise_model}
+\end{equation}
+where $\mathbf{n}$ denotes an additive noise vector. In the noiseless case, the presence of a weak source does not theoretically prevent exact recovery as long as the mixing matrix is invertible ($det(A)=a_{11}a_{22}-a_{12}a_{21} \neq0$). Therefore, the main difficulty does not arise from the amplitude asymmetry alone, but from the way in which additive noise is transformed by the inverse mixing matrix.
+
+Applying the ideal inverse transformation to \eqref{eq:weak_noise_model} yields
+\begin{equation}
+\hat{\mathbf{s}}=\mathbf{A}^{-1}\mathbf{x}
+=\mathbf{A}^{-1}(\mathbf{A}\mathbf{s}+\mathbf{n})
+=\mathbf{s}+\mathbf{A}^{-1}\mathbf{n}.
+\label{eq:inverse_noise_general}
+\end{equation}
+Therefore, even if the sources are theoretically separable, the recovered signal is affected by a noise term transformed by the inverse mixing matrix. This means that the practical difficulty of the recovery problem depends not only on the source amplitudes, but also on how $\mathbf{A}^{-1}$ amplifies the additive perturbations.
+
+For a general $2\times 2$ mixing matrix, the inverse can be written as
+\begin{equation}
+\mathbf{A}^{-1}
+=
+\frac{1}{a_{11}a_{22}-a_{12}a_{21}}
+\begin{bmatrix}
+a_{22} & -a_{12}\\
+-a_{21} & a_{11}
+\end{bmatrix}
+\label{eq:inverse_A_general}
+\end{equation}
+provided that $\det(\mathbf{A})=a_{11}a_{22}-a_{12}a_{21}\neq 0$. 
+If the objective is to recover the first source, the corresponding estimation error is given by the first component of $\mathbf{A}^{-1}\mathbf{n}$, namely
+\begin{equation}
+e_1=
+\frac{1}{a_{11}a_{22}-a_{12}a_{21}}
+\left(a_{22}n_1-a_{12}n_2\right).
+\label{eq:e1_general}
+\end{equation}Therefore, its variance can be written as
+\begin{equation}
+\mathrm{Var}(e_1)=
+\frac{
+a_{22}^2\mathrm{Var}(n_1)
++a_{12}^2\mathrm{Var}(n_2)
+-2a_{22}a_{12}\mathrm{Cov}(n_1,n_2)
+}{
+\left(a_{11}a_{22}-a_{12}a_{21}\right)^2
+}.
+\label{eq:var_e1_expanded}
+\end{equation}
+Assuming that $n_1$ and $n_2$ are zero-mean, uncorrelated, and have equal variance $\sigma^2$, the variance of this error (and similarly $e_2$) becomes
+\begin{equation}
+\mathrm{Var}(e_1)=
+\frac{\sigma^2\left(a_{22}^2+a_{12}^2\right)}
+{\left(a_{11}a_{22}-a_{12}a_{21}\right)^2} \qquad
+\mathrm{Var}(e_2)=
+\frac{\sigma^2\left(a_{12}^2+a_{11}^2\right)}
+{\left(a_{11}a_{22}-a_{12}a_{21}\right)^2}
+\label{eq:var_e1_e2_general}
+\end{equation}
+
+From equation \eqref{eq:inverse_noise_general}, the recovered sources can be written as
+\begin{equation}
+\hat{s}_1 = s_1 + e_1 \qquad
+\hat{s}_2 = s_2 + e_2
+\label{eq:s1s2_hat_error}
+\end{equation}
+where $e_1,e_2$ are the error terms introduced by the transformed noise. This expression allows the previous result to be connected with two practical performance measures: the output SNR and the correlation between the true and recovered sources.
+Assuming that $e_1$ is uncorrelated with $s_1$, the output SNR for the first recovered source can be defined as
+\begin{equation}
+\mathrm{SNR}_1=\frac{\mathrm{Var}(s_1)}{\mathrm{Var}(e_1)}.
+\label{eq:snr1_def}
+\end{equation}
+Similarly, using \eqref{eq:s1s2_hat_error} and the assumption that $s_1$ and $e_1$ are uncorrelated, the correlation between $s_1$ and $\hat{s}_1$ can be written as
+\begin{equation}
+\rho_{s_1,\hat{s}_1}=
+\frac{\mathrm{Cov}(s_1,\hat{s}_1)}
+{\sqrt{\mathrm{Var}(s_1)\mathrm{Var}(\hat{s}_1)}} = \frac{1}{\sqrt{1+\frac{\mathrm{Var}(e_1)}{\mathrm{Var}(s_1)}}}
+\label{eq:corr_def}
+\end{equation}
+
+The previous derivation provides general expressions for the output correlation and SNR by describing how additive noise propagates through the inverse mixing matrix $A^{-1}$ and affects the recovered sources. It is worth noting that as $\mathbf{det(A)}$ approaches 0, both error variances grow rapidly. Given the equations \ref{eq:snr1_def} and \ref{eq:corr_def}, greater values of $\mathrm{Var}(e_1)$ and  $\mathrm{Var}(e_2)$ worsen the SNR and correlation, \uline{ which implies that noise has a greater effect on the separation when $\mathbf{det(A)}\rightarrow 0$. }
+
+Additionally, to relate these results to the specific problem addressed in this work, it is useful to consider these metrics under the model described in section \ref{subsec:Assymetric attenuation}, where $\mathbf{a_{11}=a_{22}=1 \gg a_{21}}$ and $\mathbf{a_{12}=\beta \in[0,1]}$. This substitution makes it easier to specifically explain how the parameter $\beta$ influences the recovery of the weak target source. Consequently, the corresponding output SNR and source-estimate correlation can also be written as functions of $\beta$.
+
+\begin{equation}
+\rho_{s_1,\hat{s}_1}
+ = \frac{1}{\sqrt{1+\frac{\sigma^2 (1+\beta^2)}{\mathrm{Var}(s1)}}}
+ \qquad
+ \mathrm{SNR}_1=\frac{\mathrm{Var}(s1)}{\sigma^2 (1+\beta^2)}
+\label{eq:s1_metrics_with_beta}
+\end{equation}
+
+\begin{equation}
+\rho_{s_2,\hat{s}_2}
+ = \frac{1}{\sqrt{1+\frac{\sigma^2}{\mathrm{Var}(s2)}}}
+ \qquad
+ \mathrm{SNR}_2=\frac{\mathrm{Var}(s2)}{\sigma^2}
+\label{eq:s2_metrics_with_beta}
+\end{equation}
+
+Given these expressions, it is easier to draw explicit conclusions about the influence of the parameter $\beta$ over the separation process. Equation \ref{eq:s1_metrics_with_beta} demonstrates that the estimation of $s1$ (weak source) is worsened as $\beta$ increases, since $\mathrm{SNR}_1 \propto \frac{1}{1+\beta^2}$. However, the dominant signal (in this case $s_2$) is theoretically not affected by the $\beta$ parameter as it does not appear in the correlation and SNR expressions for $s_2$.
+
+\subsubsection{Convolutive mixtures}
+
+The previous analysis assumes an instantenous mixing model, which makes it possible to describe the separation process through a fixed constant mixing matrix. This makes it simple to derive closed-form expressions for the noise influence, the output SNR of each original signal and the source-estimate correlation. However, when delay is introduced, these assumptions no longer hold and the expressions derived in the previous section do not apply directly.
+
+More specifically, if each sources reach the observed channels with a relative delay, denoted as $\tau$, the model becomes convolutive. Let $D_\tau$ be the delay operator, defined as $D_\tau x(t)=x(t-\tau).$ Then the delayed mixing model can be expressed as 
+
+\begin{equation}
+    \mathbf{x}(t)=\mathbf{A}_{\tau}\mathbf{s}(t)+\mathbf{n}(t),
+    \qquad
+    \mathbf{A}_{\tau}=
+    \begin{bmatrix}
+    a_{11} & a_{12}D_{\tau}\\
+    a_{21}D_{\tau} & a_{22}
+    \end{bmatrix}
+\label{eq:conv_matrix_model}
+\end{equation}
+
+
 
 \section{Second-Order Blind Identification (SOBI)}
 \section{Constrained(ICA)}
@@ -122,4 +310,4 @@ Even tough ICA's process may seem
 \subsection{Avantages and limitations}
 \section{Convolutive / Frequency-domain ICA}
 \section{Framework}
-\section{Implementacion en vivo}
+\section{Live implementation}
