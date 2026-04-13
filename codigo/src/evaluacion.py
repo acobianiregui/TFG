@@ -3,6 +3,8 @@ import numpy as np
 from sklearn.decomposition import FastICA
 from src.metricas import *
 import pandas as pd
+from src.constrained_ica import *
+from src.generador import *
 #RUN algortimos
 
 # FastICA
@@ -165,3 +167,88 @@ def comparar_rms_ventanas(x, y, fs, window_ms=150, step_ms=50):
 
     return rms_x, rms_y, corr
 
+#PARA CONSTRAINED NOTEBOOK
+def run_methods_on_case(case, lambda_ref=5.0, random_state=0):
+    """
+    Ejecuta:
+      - FastICA
+      - constrained FastICA con anti-referencia del contaminante
+      - constrained FastICA con referencia imperfecta (anti-ref)
+    """
+    X = case["X"]
+    S_true = case["S_true"]
+
+    # Baseline ICA
+    S_ica, W_ica = run_fastica(X, random_state=random_state)
+    df_ica, S_ica_al, env_ica = evaluate_method("FastICA", S_ica, S_true)
+
+    # Constrained usando anti-referencia del contaminante
+    S_con_bad, W_con_bad = constrained_fastICA(
+        X,
+        ref=case["ref_bad"],
+        constrain_row=0,
+        n_components=2,
+        random_state=random_state,
+        hard_ref=True,
+        lambda_ref=lambda_ref,
+    )
+    df_con_bad, S_con_bad_al, env_con_bad = evaluate_method(
+        "Constrained (anti-ref s2)", S_con_bad, S_true
+    )
+
+    # Constrained usando referencia imperfecta tratada como anti-ref
+    S_con_imp, W_con_imp = constrained_fastICA(
+        X,
+        ref=case["ref_good_imperfect"],
+        constrain_row=0,
+        n_components=2,
+        random_state=random_state,
+        hard_ref=True,
+        lambda_ref=lambda_ref,
+    )
+    df_con_imp, S_con_imp_al, env_con_imp = evaluate_method(
+        "Constrained (ref imperfecta)", S_con_imp, S_true
+    )
+
+    df = pd.concat([df_ica, df_con_bad, df_con_imp], ignore_index=True)
+
+    return {
+        "df": df,
+        "S_ica": S_ica_al,
+        "S_con_bad": S_con_bad_al,
+        "S_con_imp": S_con_imp_al,
+        "env_ica": env_ica,
+        "env_con_bad": env_con_bad,
+        "env_con_imp": env_con_imp,
+    }
+##PARA PRUEBAS DE LOS PARAMETROS
+def run_grid(param_name, values, base_case_kwargs, lambda_ref=5.0, random_state=0):
+    """
+    Barre un parámetro y devuelve un DataFrame con métricas de s1.
+    """
+    rows = []
+
+    for v in values:
+        kwargs = dict(base_case_kwargs)
+        kwargs[param_name] = v
+
+        case = build_case(random_state=random_state, **kwargs)
+        out = run_methods_on_case(case, lambda_ref=lambda_ref, random_state=random_state)
+
+        s1_df = out["df"][out["df"]["source"] == "s1"].copy()
+        s1_df[param_name] = v
+        rows.append(s1_df)
+
+    return pd.concat(rows, ignore_index=True)
+
+## Cuando se usa build_case() esta funcion viene bien
+def summarize_s1(df):
+    """
+    Resumen solo para s1, que es la fuente objetivo.
+    """
+    cols = ["method", "corr", "corr_rms", "rms_rel_error", "rel_mae_rms_env"]
+    return (
+        df[df["source"] == "s1"][cols]
+        .sort_values(["corr_rms", "corr"], ascending=False)
+        .reset_index(drop=True)
+    )
