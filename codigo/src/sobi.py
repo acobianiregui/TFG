@@ -9,9 +9,9 @@ def _sym_decorrelation(W: np.ndarray) -> np.ndarray:
 
 def _joint_diag_jacobi(mats, eps=1e-7, max_sweeps=100):
     """
-    Approximate Joint Diagonalization (AJD) by Jacobi/Givens rotations.
+    Approximate Joint Diagonalization by Jacobi/Givens rotations.
     mats: list of (n,n) symmetric matrices to be jointly diagonalized.
-    Returns: B (n,n) such that for all k, B mats[k] B^T is ~diagonal.
+    Returns: B (n,n) such that for all k, B mats[k] B^T is approx diagonal.
     """
     n = mats[0].shape[0]
     B = np.eye(n)
@@ -19,28 +19,26 @@ def _joint_diag_jacobi(mats, eps=1e-7, max_sweeps=100):
     for _ in range(max_sweeps):
         improved = False
 
-        # One sweep over all pairs (p,q)
+        #One sweep over pairs (p,q)
         for p in range(n - 1):
             for q in range(p + 1, n):
-                # Build 2x2 problem accumulated over matrices
+                #Build 2x2 problem 
                 g11 = 0.0
-                g22 = 0.0
                 g12 = 0.0
 
                 for A in mats:
                     app = A[p, p]
                     aqq = A[q, q]
                     apq = A[p, q]
-                    # Objective-driven accumulations
+                    #Objective quantities
                     g11 += (app - aqq)
                     g12 += 2.0 * apq
-                    g22 -= (app - aqq)
 
-                # If already (almost) diagonal w.r.t this pair, skip
+                #If already diagonal, skip
                 if abs(g12) <= eps:
                     continue
 
-                # Compute rotation angle that reduces off-diagonal terms
+                #Calculate rotation angle
                 theta = 0.5 * np.arctan2(g12, g11)
                 c = np.cos(theta)
                 s = np.sin(theta)
@@ -50,14 +48,13 @@ def _joint_diag_jacobi(mats, eps=1e-7, max_sweeps=100):
 
                 improved = True
 
-                # Apply rotation to B (left-multiply on rows p,q)
+                #Apply rotation to B
                 Bp = B[p, :].copy()
                 Bq = B[q, :].copy()
                 B[p, :] = c * Bp + s * Bq
                 B[q, :] = -s * Bp + c * Bq
 
-                # Apply similarity transform to all matrices: A <- G A G^T
-                # Efficient update of rows/cols p,q
+                #Update of rows/cols p,q
                 for k in range(len(mats)):
                     A = mats[k]
 
@@ -67,7 +64,7 @@ def _joint_diag_jacobi(mats, eps=1e-7, max_sweeps=100):
                     A[p, :] = c * Ap + s * Aq
                     A[q, :] = -s * Ap + c * Aq
 
-                    # Rotate cols p,q
+                    #Rotate cols p,q
                     Ap = A[:, p].copy()
                     Aq = A[:, q].copy()
                     A[:, p] = c * Ap + s * Aq
@@ -130,7 +127,7 @@ def sobi(X, num_delays=50, delays=None, n_sources=None, eps=1e-7, max_sweeps=100
     for tau in delays:
         if tau <= 0 or tau >= n_samples:
             continue
-        R = (Xw[tau:, :].T @ Xw[:-tau, :]) / (n_samples - tau)  # (src,src)
+        R = (Xw[tau:, :].T @ Xw[:-tau, :]) / (n_samples - tau) 
         R = 0.5 * (R + R.T)  # simetrizar
         mats.append(R)
 
@@ -139,7 +136,7 @@ def sobi(X, num_delays=50, delays=None, n_sources=None, eps=1e-7, max_sweeps=100
 
     #4 Diagonalización conjunta 
     mats_copy = [A.copy() for A in mats] #Copia para no modificar los originales
-    B = _joint_diag_jacobi(mats_copy, eps=eps, max_sweeps=max_sweeps)  # (src,src)
+    B = _joint_diag_jacobi(mats_copy, eps=eps, max_sweeps=max_sweeps) 
     B = _sym_decorrelation(B)
 
     #5 Separación
