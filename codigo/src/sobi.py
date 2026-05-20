@@ -2,16 +2,16 @@
 import numpy as np
 
 def _sym_decorrelation(W: np.ndarray) -> np.ndarray:
-    """Symmetric decorrelation: W <- (W W^T)^(-1/2) W."""
+    """Symmetric decorrelation"""
     s, U = np.linalg.eigh(W @ W.T)
     s = np.maximum(s, 1e-12)
     return (U @ np.diag(1.0 / np.sqrt(s)) @ U.T) @ W
 
 def _joint_diag_jacobi(mats, eps=1e-7, max_sweeps=100):
     """
-    Approximate Joint Diagonalization by Jacobi/Givens rotations.
-    mats: list of (n,n) symmetric matrices to be jointly diagonalized.
-    Returns: B (n,n) such that for all k, B mats[k] B^T is approx diagonal.
+    Approximate Joint Diagonalization by Jacobi/Givens rotations
+    mats: list of (n,n) symmetric matrices to be jointly diagonalized
+    Returns: B (n,n) such that for all k, B mats[k] B^T is approx diagonal, see documentation for details
     """
     n = mats[0].shape[0]
     B = np.eye(n)
@@ -58,7 +58,7 @@ def _joint_diag_jacobi(mats, eps=1e-7, max_sweeps=100):
                 for k in range(len(mats)):
                     A = mats[k]
 
-                    # Rotate rows p,q
+                    #Rotate rows p,q
                     Ap = A[p, :].copy()
                     Aq = A[q, :].copy()
                     A[p, :] = c * Ap + s * Aq
@@ -85,61 +85,56 @@ def sobi(X, num_delays=50, delays=None, n_sources=None, eps=1e-7, max_sweeps=100
     SOBI (Second-Order Blind Identification)
 
     X: array (n_samples, n_channels)
-    delays: lista de retardos (en muestras). Si None, usa 1..num_delays.
-    n_sources: cuántas fuentes estimar (None => n_channels)
+    delays: list of delays (in samples), referenced as T in the pseucode
+    n_sources: how many sources to estimate (None => n_channels)
 
     Returns
     -------
-    S: (n_samples, n_sources) fuentes estimadas
-    W: (n_sources, n_channels) matriz de separación tal que S = Xc @ W.T
+    S: (n_samples, n_sources) estimated sources
+    W: (n_sources, n_channels) separation matrix
     """
+    #Initial check
     X = np.asarray(X, dtype=float)
     if X.ndim != 2:
-        raise ValueError("X debe ser 2D: (n_samples, n_channels)")
-
+        raise ValueError("X must be 2D: (n_samples, n_channels)")
     n_samples, n_channels = X.shape
     if n_sources is None:
         n_sources = n_channels
     n_sources = int(n_sources)
 
-    #1 Centrado
+    #1 center (if not done already)
     Xc = X - X.mean(axis=0, keepdims=True)
 
-    #2 Whitening 
+    #2 Whitening (if not whitened already)
     R0 = (Xc.T @ Xc) / n_samples  
     d, E = np.linalg.eigh(R0)
     idx = np.argsort(d)[::-1]
     d = d[idx]
     E = E[:, idx]
-
-    #3 Reducir al numero de fuentes indicado
     E = E[:, :n_sources]
     d = np.maximum(d[:n_sources], 1e-12)
-
     Wh = np.diag(1.0 / np.sqrt(d)) @ E.T          
     Xw = Xc @ Wh.T                                
 
-    #3 Matrices de covarianza retardada
+    #3 lagged covariance matrices
     if delays is None:
         delays = list(range(1, int(num_delays) + 1))
-
     mats = []
     for tau in delays:
         if tau <= 0 or tau >= n_samples:
             continue
         R = (Xw[tau:, :].T @ Xw[:-tau, :]) / (n_samples - tau) 
-        R = 0.5 * (R + R.T)  # simetrizar
+        R = 0.5 * (R + R.T)  #symmetric
         mats.append(R)
-
     if len(mats) == 0:
-        raise ValueError("No hay retardos válidos. Ajusta num_delays/delays.")
+        raise ValueError("No valid set of delays T was provided")
 
-    #4 Diagonalización conjunta 
-    mats_copy = [A.copy() for A in mats] #Copia para no modificar los originales
+    #4 joint diagonalization (jacobi rotations,see function)
+    mats_copy = [A.copy() for A in mats] 
     B = _joint_diag_jacobi(mats_copy, eps=eps, max_sweeps=max_sweeps) 
     B = _sym_decorrelation(B)
 
-    #5 Separación
+    #5 separation
     W = B @ Wh
     S = Xc @ W.T
 
