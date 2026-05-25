@@ -34,7 +34,7 @@ TFG/
 │ └── ...
 │
 ├── figuras/ # Figures used in thesis
-├── imagenes/ # Additional images/assets
+├── imagenes/ # Additional images/assets (related to Appendix B)
 │
 ├── presentacion_seguimiento/ # Presentation slides
 ├── recursos/ # Papers and references
