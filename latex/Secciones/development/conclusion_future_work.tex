@@ -1,0 +1,189 @@
+\chapter{Conclusion and future work}
+
+This final chapter presents the main conclusions extracted from the work developed throughout this thesis. First, a global comparison of the implemented separation algorithms is included, assessing their performance,  limitations and relevance for the weak source EMG separation problem addressed in this study. This comparison includes blind, temporal and semi-blind approaches, with special attention to their behavior under noise, signal imbalance and mixing conditions.
+
+This chapter also aims to discuss important considerations for the online implementation of these algorithms. Since the original motivation of this work is related to improving EMG prosthetic control, these considerations are essential to assess whether the proposed approaches could be adapted to real-time applications. Finally, the main limitations of the present work are addressed and future research directions are proposed. In this way, the chapter closes the thesis by summarizing its contributions while indicating possible paths for further development in EMG source separation.
+
+\section{Global algorithm comparison}
+
+The experiments presented throughout this thesis have shown that the evaluated separation algorithms can perform well in ideal or semi-ideal weak source scenarios, especially when the mixing process is instantaneous and the noise level is low. However, when more realistic effects are introduced, such as additive noise and delayed source contributions, standard blind source separation methods struggle to recover the weak target source with precision.
+
+This limitation is mainly caused by the nature of the weak source mixing problem. Since the target component $s_1$ has a much smaller representation in the mixing matrix compared to the dominant source $s_2$, small non-idealities may produce a significant degradation in its recovery. Although semi-blind approaches, such as regression and constrained ICA, can potentially  compensate for some of these effects by introducing additional information into the separation process, their performance is still limited by the amount of target information actually present in the observed channels.
+
+The results also suggest that the algorithms are more capable of compensating for additive noise than for delayed contributions. While noise mainly reduces the signal quality, \uline{temporal delays modify the effective mixing model and make the instantaneous separation dependent on the dominant source}. As a result, delayed interference represents one of the most important challenges for the weak-source separation problem considered in this work.
+
+Overall, the dominant source is generally easier to retrieve than the weak target source. This is expected, since the dominant component has higher variance, is less affected by contamination from the weak source and better satisfies the assumptions used by the separation algorithms. Consequently, the recovery of $s_2$ tends to be more stable, while the recovery of $s_1$ is much more sensitive to noise, delay and mixing imbalance.\\
+
+As a summary, Table \ref{tab:global_comparison} details the main assumptions, strengths and limitations of each algorithm studied in this thesis. \\
+
+
+\begin{table}[H]
+\centering
+\label{tab:method_summary}
+
+\begin{tabular}{L{2.5cm} L{3.5cm} L{4cm} L{4cm}}
+\toprule
+\textbf{Method} & \textbf{Main assumption} & \textbf{Strengths} & \textbf{Limitations} \\
+\midrule
+
+FastICA &
+Statistical independence and non-Gaussianity &
+Effective in ideal instantaneous mixtures and computationally efficient &
+Sensitive to noise, delay, source imbalance and statistical dependence \\
+
+\midrule
+
+SOBI &
+Different temporal correlation structures &
+Useful when sources have different autocorrelation patterns &
+Limited when EMG sources have similar temporal behavior and depends strongly on selected lags \\
+
+\midrule
+
+Regression &
+$c_2$ approximates the dominant interference $s_2$ &
+Simple, interpretable and suitable for online implementation &
+Imperfect reference of $s_2$ significantly impacts the separation quality \\
+
+\midrule
+
+Constrained ICA &
+Prior information can guide the separation &
+Less dependent on the reference. Useful in high-dimensionality cases &
+Requires a representative reference or constraint \\
+
+\bottomrule
+\end{tabular}
+\caption{Global comparison of the evaluated separation methods.}
+\label{tab:global_comparison}
+\end{table}
+
+\section{Considerations}
+
+\subsection{Ground truth}
+
+For the experiments presented in this thesis, the ground truth sources were available as the mixing process was controlled in simulation. However, in real world scenarios, the original sources are not directly obtainable, since recovering them is precisely the objective of the separation process. For this reason, the validation of the separated components becomes a challenge.
+
+A possible solution would be to compare the estimated components with the intended or self-reported activation of the patient. For example, if the patient is asked to perform a specific movement, the separated source should show an activation pattern consistent with that task. An additional possibility would be to apply different separation algorithms and compare the consistency of their outputs.
+
+\subsection{Online implementation}
+
+Live implementation requires causal algorithms. Although all the methods considered in this thesis satisfy this requirement, their practical implementation is not equally straightforward.
+
+Linear regression is the simplest method to implement in real time, since the only parameter that needs to be updated is the coefficient $\hat{\beta}$, either for each window or sample by sample. Once this coefficient is estimated, the target source is obtained by subtracting the estimated interference from the observed channel.
+
+For the remaining algorithms, two main strategies can be considered. The first is to estimate the separation parameters during a calibration stage using representative mixtures and then apply the resulting separation matrix to each incoming EMG window. This makes the online stage more computationally efficient, which reduces processing time, but less adaptable.
+
+The second strategy is to recompute or update the parameters for each window. This makes the system more adaptive to changes in the EMG recordings, but it also increases processing time and may reduce stability if the window is too short to estimate the required statistics reliably.
+
+Table \ref{tab:online_update_considerations} shows some considerations for each algorithm when using this second approach, where the separation parameters are updated for each incoming EMG window.
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{2.7cm}
+                                >{\raggedright\arraybackslash}p{3.6cm}
+                                Y}
+\toprule
+\textbf{Algorithm} & \textbf{Updated parameters} & \textbf{Main considerations} \\
+\midrule
+
+Linear regression
+&
+$\mathbf{\hat{\beta}}$
+&
+Efficient, but depends on $c_2$ representing the interference well. \\
+
+\addlinespace
+
+FastICA
+&
+Separation matrix $\mathbf{W}$
+&
+Requires stable independence estimates. \\
+
+\addlinespace
+
+SOBI
+&
+Lagged covariance matrices and $\mathbf{W}$
+&
+Needs enough samples to estimate reliable lagged covariance matrices. Longer processing times. \\
+
+\addlinespace
+
+Constrained ICA
+&
+$\mathbf{W}$ and reference constraint
+&
+Depends strongly on representative constraints. \\
+
+\bottomrule
+\end{tabularx}
+\caption{Considerations for window online parameter updating.}
+\label{tab:online_update_considerations}
+\end{table}
+\clearpage
+\section{Future work}
+
+Although the results obtained in this thesis show that source separation methods can provide useful insight into weak-source EMG mixtures, the proposed algorithms still rely on several  assumptions. The experiments were mainly designed to evaluate the behavior of different algorithms under controlled conditions, where the sources and mixing process were carefully defined. Future work should move towards more realistic signal models, experimental validation with real subjects and evaluation procedures that do not require access to the true underlying sources.
+
+Given all these considerations, future work could explore the following directions:
+
+\begin{itemize}
+    \item \textbf{Convolutive separation methods} 
+    \\ \\
+    In the initial hypothesis of this work, it was assumed that small delays could
+be approximated by instantaneous models. However, the results showed that
+including delayed contributions in the separation process could potentially
+improve the separation of these EMG sources. This would considerably increase
+the complexity of the problem, since separation filters would need to be estimated
+instead of a single instantaneous matrix. Additionally, the permutation problem
+would become much harder as the source order may change across frequency bands. These considerations
+make the final reconstruction significantly more difficult.
+
+    \item \textbf{Testing with real subjects}
+    \\ \\
+    The proposed methods should be validated with real subjects under controlled movement tasks. In this case, the separated components could be compared with the intended movement, patient feedback or expected activation patterns.
+
+    \item \textbf{Indirect validation without ground truth}
+    \\ \\
+    Since the original sources are not directly obtainable in real world scenarios, future work could compare multiple separation algorithms and analyze whether they recover consistent components in terms of activation timing and RMS envelope.
+
+    \item \textbf{Scale reconstruction}
+    \\ \\
+    The separation algorithms, excluding regression, suffer from scale indetermination. Section~\ref{sec:scale_reconstruction} addressed this issue from a theoretical level, but future work should focus on developing a reliable way to estimate the scale factors in real-world tests.
+\end{itemize}
+
+\clearpage
+
+\section{Final Reflection}
+
+
+Overall, this thesis has provided a structured analysis of source separation methods
+for weak EMG components in mixed recordings in different settings. The results
+show that the recovery of the target signal depends strongly on the mixing
+conditions, the variance of the sources, the presence of noise and delayed
+contributions of the signals.
+
+While no single method can be considered ideal for every case, the comparison
+between regression, ICA, SOBI and constrained ICA demonstrates the advantages and
+limitations of each approach. \uline{For the IIT project scenario}, linear regression may
+be the most practical option if the reference channel is accurate enough and the
+delay can be estimated. Otherwise, constrained ICA can potentially provide a more flexible
+and personalized approach, especially when additional sources or less ideal mixing
+conditions are present.
+
+Although further validation with real subjects is still necessary, the methodology
+developed in this thesis represents a useful first step towards more reliable EMG
+processing strategies for prosthetic  applications. In particular, the
+results suggest that including prior information or
+physiologically meaningful constraints may help improve separation in non-trivial
+cases. Additionally, convolutive models could also be explored to reduce interference from
+delayed contributions.
+
+This is especially relevant in the weak source scenario, where the target component
+has significantly lower variance than the dominant source. As a result, small
+amounts of noise or residual interference can have a much larger impact on its
+recovery. Consequently, this work opens the door to future work in
+semi-blind, adaptive and convolutive EMG separation methods, with the 
+goal of improving the reliability of myoelectric control systems.
