@@ -1,7 +1,7 @@
 # 📡 Bachelor's Thesis: Separation of Electromyographic Signals According to Their Muscle of Origin
 
 This repository contains my Bachelor's Thesis in **Telecommunication Engineering**.  
-The original thesis was written in Spanish, so some variable names, comments, notebooks or code sections may still appear in Spanish.
+The original thesis work was developed in Spanish, so some variable names, comments, notebooks or code sections may still appear in Spanish.
 
 The project studies the **separation of weak electromyographic (EMG) signals mixed with stronger muscular interference**, with applications in active prostheses and reinnervated muscle scenarios such as **VDMT**, **RPNI** and **TMR**.
 
