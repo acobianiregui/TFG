@@ -1,6 +1,7 @@
 **/recursos/
 /firma.png
 
+#figuras/*
 
 !figuras/ICA/
 !figuras/ICA/**
@@ -10,3 +11,6 @@
 
 !figuras/constrained/
 !figuras/constrained/**
+
+!figuras/preprocessing/
+!figuras/preprocessing/**
