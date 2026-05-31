@@ -1,24 +1,26 @@
-# 📡 TFG: Separación de señales electromiográficas según el músculo de procedencia
+# 📡 Bachelor's Thesis: Separation of Electromyographic Signals According to Their Muscle of Origin
 
-Este repositorio contiene el Trabajo de Fin de Grado en **Ingeniería de Telecomunicación**.  
-El proyecto trata sobre la **separación de señales electromiográficas (EMG) según el músculo de procedencia**, con aplicaciones en prótesis activas y técnicas de reconexión nerviosa como **VDMT** y **RPNI**.  
+This repository contains my Bachelor's Thesis in **Telecommunication Engineering**.  
+The original thesis was written in Spanish, so some variable names, comments, notebooks or code sections may still appear in Spanish.
 
----
-
-## 🎯 Objetivo
-El objetivo principal es **identificar la procedencia de señales EMG que se miden de forma superpuesta**, explorando técnicas de **procesamiento de señales y análisis de datos biológicos**.  
-Esto permitirá mejorar la precisión en el control de prótesis y en interfaces neurales que dependen de señales musculares específicas.
+The project studies the **separation of weak electromyographic (EMG) signals mixed with stronger muscular interference**, with applications in active prostheses and reinnervated muscle scenarios such as **VDMT**, **RPNI** and **TMR**.
 
 ---
 
-## 🛠️ Tecnologías utilizadas
-- Lenguajes: MATLAB, Python  
-- Frameworks/Librerías: NumPy, SciPy, Matplotlib, Scikit-learn  
-- Herramientas: MATLAB, Git, LaTeX  
+## 🎯 Objective
+The main goal is to **recover weak EMG components from mixed recordings**, focusing especially on the preservation of their activation patterns.  
+Several source separation approaches are explored, including **ICA, SOBI, constrained ICA and regression**, under controlled conditions of interference, noise and delay.
 
 ---
 
-## 📂 Estructura del repositorio
+## 🛠️ Technologies used
+- Languages: MATLAB, Python  
+- Frameworks/Libraries: NumPy, SciPy, Matplotlib, Scikit-learn  
+- Tools: MATLAB, Git, LaTeX  
+
+---
+
+## 📂 Repository structure
 ```
 TFG/
 ├── codigo/ # Code for experiments and algorithms
@@ -37,7 +39,6 @@ TFG/
 ├── imagenes/ # Additional images/assets (related to Appendix B)
 │
 ├── presentacion_seguimiento/ # Presentation slides
-├── recursos/ # Papers and references
 │
 ├── .github/ # CI workflows
 ├── README.md
@@ -45,12 +46,12 @@ TFG/
 ```
 ---
 
-## 📜 Licencia
+## 📜 License
 
-Este proyecto se distribuye bajo la licencia **MIT**.  
-Puedes usarlo, modificarlo y compartirlo libremente, siempre mencionando al autor.  
+This project is distributed under the **MIT License**.  
+You may use, modify and share it freely, provided that the author is credited.  
 
 © 2025 Anton Cobian Iregui
 
-Para más detalles, consulta el archivo [LICENSE](./LICENSE).
+For more details, see the [LICENSE](./LICENSE) file.
 
