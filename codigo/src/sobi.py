@@ -82,14 +82,11 @@ def offdiag_energy(M):
 
 def sobi(X, num_delays=50, delays=None, n_sources=None, eps=1e-7, max_sweeps=100):
     """
-    SOBI (Second-Order Blind Identification)
-
+    Inputs
     X: array (n_samples, n_channels)
     delays: list of delays (in samples), referenced as T in the pseucode
     n_sources: how many sources to estimate (None => n_channels)
-
     Returns
-    -------
     S: (n_samples, n_sources) estimated sources
     W: (n_sources, n_channels) separation matrix
     """

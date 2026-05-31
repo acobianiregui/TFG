@@ -40,8 +40,8 @@ def center(X):
 def whiten(X, eps=1e-12):
     """
     X: shape (N, m)
-    devuelve:
-      Xw: datos blanqueados
+    returns:
+      Xw: whitened data (same as Z in the thesis theory!!!!!!)
       whitening_mat
       dewhitening_mat
       mean_

@@ -1,2 +1,13 @@
 **/recursos/
 /firma.png
+
+figuras/*
+
+!figuras/ICA/
+!figuras/ICA/**
+
+!figuras/SOBI/
+!figuras/SOBI/**
+
+!figuras/Regression/
+!figuras/Regression/**

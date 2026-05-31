@@ -5,6 +5,7 @@ import re
 import scipy.io as sio
 from scipy.optimize import linear_sum_assignment
 import numpy as np
+
 #Funciones para procesar datos y archivos
 def find_movement_rep(mat_struct, movement, rep=1, data_field="DAQ_DATA"):
     if not isinstance(movement, str) or len(movement.strip()) == 0:
@@ -31,13 +32,13 @@ def find_movement_rep(mat_struct, movement, rep=1, data_field="DAQ_DATA"):
     def rep_score(k):
         kl = norm(k)
         score = 0
-        if re.search(rf"_{rep_str}\b", k):         # exact "_1"
+        if re.search(rf"_{rep_str}\b", k):         
             score += 5
-        if kl.endswith(rep_str):                    # termina en 1
+        if kl.endswith(rep_str):                    
             score += 4
-        if re.search(rf"rep{rep_str}\b", kl):       # contiene "rep1"
+        if re.search(rf"rep{rep_str}\b", kl):     
             score += 4
-        if re.search(rf"\b{rep_str}\b", k):         # aparece como token
+        if re.search(rf"\b{rep_str}\b", k):      
             score += 2
         return score
 

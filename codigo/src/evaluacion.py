@@ -3,11 +3,12 @@ import numpy as np
 from sklearn.decomposition import FastICA
 from src.metricas import *
 import pandas as pd
-from src.constrained_ica import *
+from src.constrained_ica import constrained_fastICA
 from src.generador import *
+
 #RUN algortimos
 
-# FastICA
+#FastICA
 def run_fastica(X, n_components=2, random_state=0):
     ica = FastICA(
         n_components=n_components,
@@ -86,7 +87,7 @@ def align_sources(S_est, S_true):
 
 def evaluate_method(name, S_hat, S_true, fs=1000, window_ms=150, step_ms=50):
     """
-    Alinea SIN reescalar y devuelve métricas:
+    Alinea SIN reescalar y devuelve metricas:
       - corr temporal
       - RMS global
       - error relativo RMS
@@ -132,10 +133,9 @@ def evaluate_method(name, S_hat, S_true, fs=1000, window_ms=150, step_ms=50):
 
 def comparar_rms_ventanas(x, y, fs, window_ms=150, step_ms=50):
     """
-    Calcula RMS por ventanas de dos señales y devuelve su correlación.
+    Calcula RMS por ventanas de dos señales y devuelve su correlacion
 
     Parameters
-    ----------
     x, y : array-like
         Señales a comparar
     fs : int
@@ -146,7 +146,6 @@ def comparar_rms_ventanas(x, y, fs, window_ms=150, step_ms=50):
         Paso entre ventanas
 
     Returns
-    -------
     rms_x : ndarray
     rms_y : ndarray
     corr : float
@@ -182,7 +181,7 @@ def run_methods_on_case(case, lambda_ref=5.0, random_state=0):
     S_ica, W_ica = run_fastica(X, random_state=random_state)
     df_ica, S_ica_al, env_ica = evaluate_method("FastICA", S_ica, S_true)
 
-    # Constrained usando anti-referencia del contaminante
+
     S_con_bad, W_con_bad = constrained_fastICA(
         X,
         ref=case["ref_bad"],
@@ -196,7 +195,6 @@ def run_methods_on_case(case, lambda_ref=5.0, random_state=0):
         "Constrained (anti-ref s2)", S_con_bad, S_true
     )
 
-    # Constrained usando referencia imperfecta tratada como anti-ref
     S_con_imp, W_con_imp = constrained_fastICA(
         X,
         ref=case["ref_good_imperfect"],
@@ -241,7 +239,7 @@ def run_grid(param_name, values, base_case_kwargs, lambda_ref=5.0, random_state=
 
     return pd.concat(rows, ignore_index=True)
 
-## Cuando se usa build_case() esta funcion viene bien
+##Cuando se usa build_case() esta funcion viene bien
 def summarize_s1(df):
     """
     Resumen solo para s1, que es la fuente objetivo.
