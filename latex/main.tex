@@ -1,26 +1,34 @@
 %preambulo
 \documentclass[12pt, a4paper]{report} 
-
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 \usepackage[utf8]{inputenc} 
 \usepackage[normalem]{ulem}
 \usepackage[T1]{fontenc} 
-\usepackage[english]{babel} 
+\usepackage[spanish,english]{babel} 
 \usepackage{amsmath, amsfonts, amssymb} 
 \usepackage{fancyhdr} 
 \usepackage{titlesec}
 \usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning}
 \usepackage{array}
 \usepackage{graphicx} 
 \usepackage{booktabs} 
 \usepackage{float}
 \usepackage{pifont}
 \usepackage{tabularx}
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
 \usepackage{caption}
+\usepackage{siunitx}
+
 \captionsetup[table]{labelformat=simple} % Aqui para la nomenclatura de las tablas
 %Plots / señales... 
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
-\usepackage{subcaption} %Subfiguras
+\usepackage{subcaption}
+\usepackage{siunitx}
+%Subfiguras
 
 %Margenes
 %\usepackage[a4paper,
@@ -60,20 +68,28 @@
 
 \usepackage[
     backend=biber,
-    sorting=ynt,
-    style=apa
+    sorting=none,
+    style=ieee
 ]{biblatex}
-\addbibresource{referencias2.bib}
+\addbibresource{referencias.bib}
 \fancyhf{} % Limpia encabezado
 \renewcommand{\chaptermark}[1]{%
   \markboth{\thechapter.\ #1}{}%
 }
+
 % Cabecera 
 \fancyhead[L]{\includegraphics[height=25pt]{imagenes/comillas_icai_logo.jpeg}}          
 \fancyhead[C]{\leftmark}        
 \fancyhead[R]{A.C.I}
 \setlength{\headsep}{50pt}  %Modificar salto entre cabecera y contenido
-
+% redefinir el estilo plain, que es el que usa \chapter
+\fancypagestyle{plain}{
+    \fancyhf{} 
+    \fancyhead[L]{\includegraphics[height=25pt]{imagenes/comillas_icai_logo.jpeg}}
+    \fancyhead[R]{A.C.I}
+    \fancyhead[C]{\leftmark}  
+    \fancyfoot[C]{\thepage} 
+}
 
 % Pie de pagina 
 \fancyfoot[C]{\thepage}  
@@ -82,20 +98,59 @@
 \titleformat{\chapter}[display]
   {\normalfont\huge\bfseries}
   {\chaptername\ \thechapter}{10pt}{\Huge}
-\titlespacing*{\chapter}{0pt}{-70pt}{30pt}
-
-
-
+\titlespacing*{\chapter}{0pt}{-20pt}{30pt}
+%PA LOS CODIGOS
 \usepackage{listings}
 \usepackage{xcolor}
-
+\lstdefinestyle{pseudocode}{
+    basicstyle=\ttfamily\small,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny,
+    stepnumber=1,
+    numbersep=8pt,
+    xleftmargin=15pt,
+    framexleftmargin=15pt,
+    captionpos=b,
+    breaklines=true,
+    columns=fullflexible,
+    keepspaces=true
+}
+\lstdefinestyle{pythonappendix}{
+    language=Python,
+    basicstyle=\ttfamily\scriptsize,
+    keywordstyle=\bfseries,
+    commentstyle=\itshape\color{gray},
+    stringstyle=\color{gray},
+    numbers=left,
+    numberstyle=\tiny,
+    stepnumber=1,
+    numbersep=6pt,
+    frame=single,
+    breaklines=true,
+    breakatwhitespace=true,
+    tabsize=4,
+    showstringspaces=false,
+    captionpos=b
+}
+\newcommand{\tituloTFG}{\textbf{[Título del Trabajo Fin de Grado]}}
+\newcommand{\cursoAcademico}{202X--202X}
+\newcommand{\nombreAlumno}{Nombre Apellido1 Apellido2}
+\newcommand{\fechaDeclaracion}{\today}
+\usepackage{xurl}
+\AtEveryBibitem{%
+  \clearfield{urldate}%
+  \clearfield{urlyear}%
+  \clearfield{urlmonth}%
+  \clearfield{urlday}%
+}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
 \begin{document}
+\selectlanguage{english}
 \pagestyle{empty} 
 \input{latex/Secciones/portada}
 \clearpage
 \input{latex/Secciones/autorizacion}
-\clearpage
-\input{latex/Secciones/digitalizacion}
 \clearpage
 \input{latex/anexos/anexoI}
 \clearpage
@@ -104,6 +159,7 @@
 \input{latex/Secciones/resumen}
 \clearpage
 \input{latex/Secciones/abstract}
+\input{latex/acknowledgments}
 \clearpage
 \tableofcontents
 \pagestyle{fancy}
@@ -111,8 +167,16 @@
 \clearpage
 \include{latex/Secciones/Estado del arte}
 \clearpage
-\include{latex/Secciones/Metodologia}
+\include{latex/Secciones/development}
 \clearpage
+\include{latex/Secciones/development/conclusion_future_work}
+\clearpage
+\input{latex/appendix_A}
+\clearpage
+\input{latex/Secciones/appendices/SDG}
+\clearpage
+\begingroup
+\sloppy
 \printbibliography
-
+\endgroup
 \end{document}

@@ -1,0 +1,586 @@
+\appendix
+\renewcommand{\chaptername}{Appendix}
+\renewcommand{\thechapter}{\Roman{chapter}}
+\chapter{GitHub Repository}
+
+The code and supplementary material developed during this Bachelor's Thesis are available in the following GitHub repository:
+
+\begin{center}
+\url{https://github.com/acobianiregui/TFG}
+\end{center}
+
+The repository contains the implementation used for the experimental work, including signal preprocessing, mixture generation, source separation algorithms and evaluation metrics. The main purpose of the repository is to support reproducibility and to provide access to the scripts used to obtain the results presented in this thesis.
+
+Since the original work was developed in Spanish, some comments, variable names or notebook sections may remain in Spanish. In addition, the notebooks are mainly used as experimental workspaces and may contain exploratory tests (especially for \textit{"prueba ICA.ipynb"}). For this reason, the most relevant and reusable parts of the implementation are organized in Python modules under the source code directory.
+
+The repository also includes basic GitHub Actions workflows for continuous integration. These workflows are included to performs simple quality control checks with each contribution. In particular, they check that the Python files can be compiled without syntax errors and that undefined variables are detected before changes are added to the repository. This helps maintain the reusable code modules in a more reliable state, while the notebooks remain mainly as exploratory experimental material.
+
+The repository includes:
+
+\begin{itemize}
+    \item Python implementations of the main source separation methods used in the thesis, including FastICA, SOBI and constrained ICA.
+    \item Auxiliary functions for preprocessing, signal generation, evaluation metrics and visualization.
+    \item Jupyter notebooks used for experimental testing and comparison of methods.
+    \item The LaTeX source files of the thesis.
+    \item Figures containing results of the experiments. \textbf{Figures that I do not own can be found at their respective sources}.
+    \item Basic continuous integration workflows for syntax checking and detection of undefined variables in the Python source files.
+\end{itemize}
+
+The repository should be understood as a complementary resource to the thesis rather than as a standalone software package.
+
+\chapter{Relevant Code Fragments}
+\label{app:code}
+Even though the majority of the files used for this thesis are included in the GitHub repository, it may be of interest to dedicate an appendix to relevant code fragments. This is done with intention to facilitate the comprehension of the implementations throughout this thesis. 
+\section{Experimental procedure}
+\subsection{Synthetic signal generation}
+\label{app:synthetic_signals}
+\begin{lstlisting}[
+style=pythonappendix,
+caption={Artificial signal generator function. These signals are mainly used to test SOBI hypothesis in EMG.},
+label={lst:artificial_signals_code}
+]
+def generate_artificial_signals(fs=1000, duration=10, seed=None, eps=1e-12):
+    """
+    Generate two artificial EMG source signals with different frequency
+    bands and envelopes
+
+    Returns
+    t : ndarray
+        Time vector.
+    S_true : ndarray
+        Source matrix with shape (N, 2).
+    """
+
+    rng = np.random.default_rng(seed)
+
+    t = np.arange(0, duration, 1 / fs)
+    N = len(t)
+
+    #s1: fast component
+    raw_s1 = rng.normal(0, 1, N)
+    b1, a1 = signal.butter(2, [90, 180], btype="bandpass", fs=fs)
+    s1 = signal.filtfilt(b1, a1, raw_s1)
+    s1 *= 0.5 * (1 + np.sin(2 * np.pi * 0.9 * t))
+
+    #s2: slow component
+    raw_s2 = rng.normal(0, 1, N)
+    b2, a2 = signal.butter(2, [20, 50], btype="bandpass", fs=fs)
+    s2 = signal.filtfilt(b2, a2, raw_s2)
+    s2 *= 0.6 * (1 + np.cos(2 * np.pi * 0.15 * t))
+
+    #RMS normalization
+    s1 = s1 / (np.sqrt(np.mean(s1**2)) + eps)
+    s2 = s2 / (np.sqrt(np.mean(s2**2)) + eps)
+
+    S_true = np.column_stack([s1, s2])
+
+    return t, S_true, s1, s2
+\end{lstlisting}
+
+\subsection{Signal conditioning}
+\label{app:signal_coditioning}
+\begin{lstlisting}[
+style=pythonappendix,
+caption={Condition signals function. Adapts original signals from TMR database into more appropiate activations for the thesis study. \textbf{DISCLAIMER:} original function in Spanish is "construir senales" which is used in the notebooks.},
+label={lst:condition_signals_code}
+]
+def condition_signals(u1,u2,pattern=[0, 3, 2,1, 3, 3, 1, 2, 3, 0,2, 3,1],dur_block1=0.5,dur_block2=0.5,fs=1000):
+    N = min(len(u1), len(u2))
+    u1 = u1[:N]
+
+    u2 = u2[:N]
+    N = len(u1)
+    t = np.arange(N) / fs
+
+    m1 = np.zeros(N)
+    m2 = np.zeros(N)
+    m3 = np.zeros(N)
+    
+    block = int(dur_block1)
+    block2 = int(dur_block2)
+    for i, state in enumerate(pattern):
+        a = i * block
+        a2= i * block2
+        b = min((i + 1) * block, N)
+        b2= min((i + 1) * block2, N)
+        if state == 1:
+            m1[a:b] = 1.0
+            m3[a:b] = 1.0
+        elif state == 2:
+            m2[a2:b2] = 1.0
+        elif state == 3:
+            m1[a:b] = 1.0
+            m3[a:b] = 1.0
+            m2[a2:b2] = 1.0
+
+
+    #Apply binary mask
+    s1 = m1 * u1
+    s2 = m2 * u2
+    return s1,s2
+\end{lstlisting}
+%
+
+\clearpage
+\subsection{Build case}
+
+\begin{lstlisting}[
+style=pythonappendix,
+caption={Build case function. It unifies all experimental procedure/generation functions. It is mainly used for constrained ICA testing, but it is also suitable for other tests.},
+label={lst:build_case_code}
+]
+def build_case(
+    u1, u2_raw, fs=1000, beta=1.0, a11=1.0, a21=0.01,
+    tau_ms=0.0, noise_std=0.0, pattern=None, block_ms=200,
+    target_scale=1.0, contam_scale=1.0, ref_flip_prob=0.0,
+    ref_fn_prob=0.0, ref_fp_prob=0.0, random_state=0
+):
+    """
+    THIS FUNCTION COMBINES ALL METHODOLOGY STEPS.
+    Mainly used for constrained ICA testing, but can be used for any algorithm.
+    Builds observed channels by mixing original sources
+        c1 = a11*s1 + beta*s2(t-tau) + n1
+        c2 = a21*s1 + 1.0*s2 + n2
+
+    Returns:
+        dictionary with signals, mixtures, masks and references
+    """
+    rng = np.random.default_rng(random_state)
+
+    u1 = np.asarray(u1).ravel().astype(float)
+    u2_raw = np.asarray(u2_raw).ravel().astype(float)
+    N = min(len(u1), len(u2_raw))
+    u1 = eliminar_continua(u1[:N])
+    u2_raw = eliminar_continua(u2_raw[:N])
+
+    if pattern is None:
+        pattern = [0, 1, 2,1, 3, 2, 1, 2, 3, 0,2, 3,1]
+
+    block = int(block_ms * fs / 1000)
+    m1 = np.zeros(N)
+    m2 = np.zeros(N)
+
+    for i, estado in enumerate(pattern):
+        a = i * block
+        b = min((i + 1) * block, N)
+        if a >= N:
+            break
+        if estado == 1:
+            m1[a:b] = 1.0
+        elif estado == 2:
+            m2[a:b] = 1.0
+        elif estado == 3:
+            m1[a:b] = 1.0
+            m2[a:b] = 1.0
+
+    s1 = target_scale * m1 * u1
+    s2 = contam_scale * m2 * u2_raw
+
+    tau = int(fs * tau_ms / 1000)
+    s2_del = delay_signal(s2, tau)
+
+    n1 = noise_std * rng.standard_normal(N)
+    n2 = noise_std * rng.standard_normal(N)
+
+    c1 = a11 * s1 + beta * s2_del + n1
+    c2 = a21 * s1 + 1.0 * s2 + n2
+
+    X = np.column_stack([c1, c2])
+    S_true = np.column_stack([s1, s2_del])
+
+    #Ideal binary references
+    ref_good = (m1 > 0).astype(float)
+    ref_bad = (m2 > 0).astype(float)
+
+    #Imperfections
+    ref_imp = ref_good.copy()
+    idx = np.arange(N)
+
+    #false negatives
+    pos = idx[ref_imp == 1]
+    if len(pos) > 0 and ref_fn_prob > 0:
+        k = int(ref_fn_prob * len(pos))
+        if k > 0:
+            off = rng.choice(pos, size=k, replace=False)
+            ref_imp[off] = 0.0
+
+    #false positives
+    neg = idx[ref_imp == 0]
+    if len(neg) > 0 and ref_fp_prob > 0:
+        k = int(ref_fp_prob * len(neg))
+        if k > 0:
+            on = rng.choice(neg, size=k, replace=False)
+            ref_imp[on] = 1.0
+
+    #aribitrary flips
+    if ref_flip_prob > 0:
+        k = int(ref_flip_prob * N)
+        if k > 0:
+            flip = rng.choice(idx, size=k, replace=False)
+            ref_imp[flip] = 1.0 - ref_imp[flip]
+
+    return {
+        "u1": u1, "u2_raw": u2_raw, "m1": m1, "m2": m2,
+        "s1": s1, "s2": s2, "s2_del": s2_del,
+        "X": X, "S_true": S_true,
+        "c1": c1, "c2": c2,
+        "ref_good": ref_good,
+        "ref_bad": ref_bad,
+        "ref_good_imperfect": ref_imp,
+        "tau": tau
+    }
+\end{lstlisting}
+
+\section{Preprocessing}
+
+\subsection{Whitening function}
+\label{app:prepro_whitening}
+
+\begin{lstlisting}[
+style=pythonappendix,
+caption={Whitening function. Aims to achieve decorrelated data and unit variance.},
+label={lst:whitening_code}
+]
+def whiten(X, eps=1e-12):
+    """
+    X: shape (N, m)
+    returns:
+      Xw: whitened data (same as Z in the thesis theory!!!!!!)
+      whitening_mat
+      dewhitening_mat
+      mean_
+    """
+    X = np.asarray(X, dtype=float)
+    mean_ = np.mean(X, axis=0, keepdims=True)
+    Xc = X - mean_
+
+    C = np.cov(Xc, rowvar=False)
+    eigvals, eigvecs = np.linalg.eigh(C)
+
+    idx = np.argsort(eigvals)[::-1]
+    eigvals = eigvals[idx]
+    eigvecs = eigvecs[:, idx]
+
+    D_inv_sqrt = np.diag(1.0 / np.sqrt(eigvals + eps))
+    D_sqrt = np.diag(np.sqrt(eigvals + eps))
+
+    whitening_mat = eigvecs @ D_inv_sqrt @ eigvecs.T
+    dewhitening_mat = eigvecs @ D_sqrt @ eigvecs.T
+
+    Xw = Xc @ whitening_mat.T
+    return Xw, whitening_mat, dewhitening_mat, mean_
+\end{lstlisting}
+
+\section{SOBI implementation}
+\subsection{Jacobi Joint Diagonalization}
+\label{app:joint_diag_code}
+\begin{lstlisting}[
+style=pythonappendix,
+caption={Jacobi/Givens approximate joint diagonalization.},
+label={lst:joint_diag_code}
+]
+def _joint_diag_jacobi(mats, eps=1e-7, max_sweeps=100):
+    n = mats[0].shape[0]
+    B = np.eye(n)
+
+    for _ in range(max_sweeps):
+        improved = False
+        #One sweep over pairs (p,q)
+        for p in range(n - 1):
+            for q in range(p + 1, n):
+                #Build 2x2 problem 
+                g11 = 0.0
+                g12 = 0.0
+
+                for A in mats:
+                    app = A[p, p]
+                    aqq = A[q, q]
+                    apq = A[p, q]
+                    #Objective quantities
+                    g11 += (app - aqq)
+                    g12 += 2.0 * apq
+
+                #If already diagonal, skip
+                if abs(g12) <= eps:
+                    continue
+
+                #Calculate rotation angle
+                theta = 0.5 * np.arctan2(g12, g11)
+                c = np.cos(theta)
+                s = np.sin(theta)
+
+                if abs(s) <= eps:
+                    continue
+
+                improved = True
+
+                #Apply rotation to B
+                Bp = B[p, :].copy()
+                Bq = B[q, :].copy()
+                B[p, :] = c * Bp + s * Bq
+                B[q, :] = -s * Bp + c * Bq
+
+                #Update of rows/cols p,q
+                for k in range(len(mats)):
+                    A = mats[k]
+
+                    #Rotate rows p,q
+                    Ap = A[p, :].copy()
+                    Aq = A[q, :].copy()
+                    A[p, :] = c * Ap + s * Aq
+                    A[q, :] = -s * Ap + c * Aq
+
+                    #Rotate cols p,q
+                    Ap = A[:, p].copy()
+                    Aq = A[:, q].copy()
+                    A[:, p] = c * Ap + s * Aq
+                    A[:, q] = -s * Ap + c * Aq
+
+                    mats[k] = A
+
+        if not improved:
+            break
+
+    return B
+\end{lstlisting}
+
+\subsection{SOBI code}
+\label{app:sobi_code}
+\begin{lstlisting}[
+style=pythonappendix,
+caption={General sobi implementation, based on the Jacobi/Givens approximate joint diagonalization.},
+label={lst:sobi_code}
+]
+def sobi(X, num_delays=50, delays=None, n_sources=None, eps=1e-7, max_sweeps=100):
+    """
+    Inputs
+    X: array (n_samples, n_channels)
+    delays: list of delays (in samples), referenced as T in the pseucode
+    n_sources: how many sources to estimate (None => n_channels)
+    Returns
+    S: (n_samples, n_sources) estimated sources
+    W: (n_sources, n_channels) separation matrix
+    """
+    #Initial check
+    X = np.asarray(X, dtype=float)
+    if X.ndim != 2:
+        raise ValueError("X must be 2D: (n_samples, n_channels)")
+    n_samples, n_channels = X.shape
+    if n_sources is None:
+        n_sources = n_channels
+    n_sources = int(n_sources)
+
+    #1 center (if not done already)
+    Xc = X - X.mean(axis=0, keepdims=True)
+
+    #2 Whitening (if not whitened already)
+    R0 = (Xc.T @ Xc) / n_samples  
+    d, E = np.linalg.eigh(R0)
+    idx = np.argsort(d)[::-1]
+    d = d[idx]
+    E = E[:, idx]
+    E = E[:, :n_sources]
+    d = np.maximum(d[:n_sources], 1e-12)
+    Wh = np.diag(1.0 / np.sqrt(d)) @ E.T          
+    Xw = Xc @ Wh.T                                
+
+    #3 lagged covariance matrices
+    if delays is None:
+        delays = list(range(1, int(num_delays) + 1))
+    mats = []
+    for tau in delays:
+        if tau <= 0 or tau >= n_samples:
+            continue
+        R = (Xw[tau:, :].T @ Xw[:-tau, :]) / (n_samples - tau) 
+        R = 0.5 * (R + R.T)  #symmetric
+        mats.append(R)
+    if len(mats) == 0:
+        raise ValueError("No valid set of delays T was provided")
+
+    #4 joint diagonalization (jacobi rotations,see function)
+    mats_copy = [A.copy() for A in mats] 
+    B = _joint_diag_jacobi(mats_copy, eps=eps, max_sweeps=max_sweeps) 
+    B = _sym_decorrelation(B)
+
+    #5 separation
+    W = B @ Wh
+    S = Xc @ W.T
+
+    return S, W
+\end{lstlisting}
+
+\section{Constrained ICA Implementation}
+
+\subsection{Build Reference Direction}
+\label{app:build_reference_direction}
+
+\begin{lstlisting}[
+style=pythonappendix,
+caption={Function to transform a reference into a suitable direction for the fixed point update.},
+label={lst:build_reference_direction}
+]
+def build_reference_direction(Xw, ref, max_lag=0, smooth=True, smooth_win=25, eps=1e-12):
+    ref = np.asarray(ref).ravel().astype(float)
+    ref = ref - np.mean(ref)
+
+    if smooth:
+        ref = smooth_reference(ref, win_samples=smooth_win)
+        ref = ref - np.mean(ref)
+
+    best_q = None
+    best_lag = 0
+    best_score = -np.inf
+
+    for lag in range(-max_lag, max_lag + 1):
+        ref_lag = shift_no_circular(ref, lag)
+        ref_lag = ref_lag - np.mean(ref_lag)
+
+        q = (Xw * ref_lag[:, None]).mean(axis=0)
+        score = np.linalg.norm(q)
+
+        if score > best_score:
+            best_score = score
+            best_q = q.copy()
+            best_lag = lag
+
+    if best_q is None:
+        return None, None, 0.0
+
+    nrm = np.linalg.norm(best_q)
+    if nrm < eps:
+        return None, None, 0.0
+
+    best_q = best_q / nrm
+    return best_q, best_lag, best_score
+\end{lstlisting}
+\clearpage
+\subsection{Constrained ICA Dual Reference}
+
+\begin{lstlisting}[
+style=pythonappendix,
+caption={Constrained ICA algorithm implemented in this thesis. Two references are used. The target reference is the one associated to s1 and target bad is associated to s2},
+label={lst:constrained_ICA}
+]
+def constrained_fastica_dualref_twounits(
+    X,
+    ref_s1=None,
+    ref_s2=None,
+    lambda_pos=0.1,
+    lambda_neg=0.1,
+    max_lag=0,
+    fun="logcosh",
+    alpha=1.0,
+    whiten_data=True,
+    max_iter=1000,
+    tol=1e-7,
+    random_state=0,
+    smooth_ref=True,
+    smooth_win=25,
+    eps=1e-12,
+):
+    rng = np.random.default_rng(random_state)
+
+    X = np.asarray(X, dtype=float)
+    N, M = X.shape
+
+    #Whitening included if needed
+    if whiten_data:
+        Xw, whitening_mat, dewhitening_mat, mean_ = whiten(X, eps=eps)
+    else:
+        mean_ = np.mean(X, axis=0, keepdims=True)
+        Xw = X - mean_
+        whitening_mat = np.eye(M)
+        dewhitening_mat = np.eye(M)
+
+    #Build reference directions, see build_reference_direction() for details
+    q_s1, lag_s1, score_s1 = (None, None, 0.0)
+    q_s2, lag_s2, score_s2 = (None, None, 0.0)
+
+    if ref_s1 is not None:
+        q_s1, lag_s1, score_s1 = build_reference_direction(
+            Xw,
+            ref_s1,
+            max_lag=max_lag,
+            smooth=smooth_ref,
+            smooth_win=smooth_win,
+            eps=eps,
+        )
+
+    if ref_s2 is not None:
+        q_s2, lag_s2, score_s2 = build_reference_direction(
+            Xw,
+            ref_s2,
+            max_lag=max_lag,
+            smooth=smooth_ref,
+            smooth_win=smooth_win,
+            eps=eps,
+        )
+
+    #Initialize W with two rows
+    W = rng.standard_normal((2, Xw.shape[1]))
+
+    if q_s1 is not None:
+        W[0] = q_s1 + 0.05 * rng.standard_normal(Xw.shape[1])
+    if q_s2 is not None:
+        W[1] = q_s2 + 0.05 * rng.standard_normal(Xw.shape[1])
+
+    #Symmetric decorrelation
+    W = _sym_decorrelation(W)
+
+    converged = False
+
+    for n_iter in range(max_iter):
+        W_old = W.copy()
+
+        #Standard FastICA fixed point update
+        U = Xw @ W.T
+        G, Gp = g_fun(U, fun=fun, alpha=alpha)
+
+        W_new = (G.T @ Xw) / N - np.diag(Gp.mean(axis=0)) @ W
+
+        #constraints for component 1. Target s1, avoid s2
+        if q_s1 is not None and lambda_pos > 0:
+            W_new[0] += 2 * lambda_pos * np.dot(W[0], q_s1) * q_s1
+
+        if q_s2 is not None and lambda_neg > 0:
+            W_new[0] -= 2 * lambda_neg * np.dot(W[0], q_s2) * q_s2
+
+        #constraints for component 2. Target s2, avoid s1
+        if q_s2 is not None and lambda_pos > 0:
+            W_new[1] += 2 * lambda_pos * np.dot(W[1], q_s2) * q_s2
+
+        if q_s1 is not None and lambda_neg > 0:
+            W_new[1] -= 2 * lambda_neg * np.dot(W[1], q_s1) * q_s1
+
+        #Decorrelate
+        W_new = _sym_decorrelation(W_new)
+
+        #check convergence
+        lim = np.max(np.abs(np.abs(np.diag(W_new @ W_old.T)) - 1.0))
+
+        W = W_new
+
+        if lim < tol:
+            converged = True #Solution found
+            break
+
+    #Once coverged, restore data
+    W_full = W @ whitening_mat.T
+
+    Xc = X - mean_
+    S_hat = Xc @ W_full.T
+    #Useful information if needed
+    info = {
+        "q_s1": q_s1,
+        "q_s2": q_s2,
+        "lag_s1": lag_s1,
+        "lag_s2": lag_s2,
+        "score_s1": score_s1,
+        "score_s2": score_s2,
+        "n_iter": n_iter + 1,
+        "converged": converged,
+        "W_whitened": W,
+    }
+
+    return S_hat, W_full, info
+\end{lstlisting}
