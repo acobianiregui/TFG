@@ -154,7 +154,7 @@ Overall, the whole ICA process can be interpreted as the estimation of a series 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[height=6.5cm, width=0.35\textwidth]{figuras/ICA_geometry.png}
+    \includegraphics[height=6.5cm, width=0.35\textwidth]{figuras/ICA/ICA_geometry.png}
     \caption{Geometric interpretation of ICA in the 2D case. The observed mixtures are decorrelated with PCA (first step) and normalized (second step). Once the data is whitened the final step corresponds to the rotation that best recovers the statistically independent sources.} 
     \label{fig:ica_geometry}
 \end{figure}
@@ -346,7 +346,7 @@ The previous derivation provides general expressions for the output correlation 
 \begin{figure}[H]
     \centering
     \makebox[\textwidth][c]{%
-        \includegraphics[width=\linewidth, height=8.5cm]{figuras/det_close_to_0.png}
+        \includegraphics[width=\linewidth, height=8.5cm]{figuras/ICA/det_close_to_0.png}
     }
     \caption{Robustness analysis: how the determinant values affect the mean correlation of the estimations $\hat{s}_1$ and $\hat{s}_2$ with the original sources $s_1$ and $s_2$ (\textbf{symmetrical attenuation case}).}
     \label{fig:det_0}
@@ -376,7 +376,7 @@ Given these expressions, it is easier to draw explicit conclusions about the inf
 \begin{figure}[H]
     \centering
     \makebox[\textwidth][c]{%
-        \includegraphics[width=\linewidth]{figuras/beta_effect_s1_corr_weak_source.png}
+        \includegraphics[width=\linewidth]{figuras/ICA/beta_effect_s1_corr_weak_source.png}
     }
     \caption{Robustness analysis: correlation of $\hat{s}_1$ with original source $s_1$ considering the weak source model (Section \ref{sec:weak_source_regime}).}
     \label{fig:beta_effect_s1_corr_weak_source}
@@ -385,7 +385,7 @@ Given these expressions, it is easier to draw explicit conclusions about the inf
 \begin{figure}[H]
     \centering
     \makebox[\textwidth][c]{%
-        \includegraphics[width=\linewidth, height=8.5cm]{figuras/beta_effect_s1_snr_weak_source.png}
+        \includegraphics[width=\linewidth, height=8.5cm]{figuras/ICA/beta_effect_s1_snr_weak_source.png}
     }
     \caption{Robustness analysis: SNR of $\hat{s}_1$ considering the weak source model (Section \ref{sec:weak_source_regime}).}
     \label{fig:beta_effect_s1_snr_weak_source}
@@ -396,7 +396,7 @@ Nevertheless, it is worth noting that in symmetric attenuation (model \ref{sec:s
 \begin{figure}[H]
     \centering
     \makebox[\textwidth][c]{%
-        \includegraphics[width=\linewidth, height=8.5cm]{figuras/beta_effect_s1_corr.png}
+        \includegraphics[width=\linewidth, height=8.5cm]{figuras/ICA/beta_effect_s1_corr.png}
     }
     \caption{Robustness analysis: correlation of $\hat{s}_1$ with original source $s_1$ considering the symmetric attenuation model (Section \ref{sec:symmetric_attenuation})}
     \label{fig:beta_effect_s1_corr}
@@ -405,7 +405,7 @@ Nevertheless, it is worth noting that in symmetric attenuation (model \ref{sec:s
 \begin{figure}[H]
     \centering
     \makebox[\textwidth][c]{%
-        \includegraphics[width=\linewidth]{figuras/beta_effect_s1_snr.png}
+        \includegraphics[width=\linewidth]{figuras/ICA/beta_effect_s1_snr.png}
     }
     \caption{Robustness analysis: SNR of $\hat{s}_1$ considering the symmetric attenuation model (Section \ref{sec:symmetric_attenuation}).}
     \label{fig:beta_effect_s1_snr}
@@ -675,7 +675,7 @@ This case shows ICA performance when all of its main assumptions are satisfied. 
 \begin{figure}[H]
     \centering
     \makebox[\textwidth][c]{%
-        \includegraphics[width=\linewidth]{figuras/ica_result_ideal.png}
+        \includegraphics[width=\linewidth]{figuras/ICA/ica_result_ideal.png}
     }
     \caption{Ideal case. FastICA recovers both sources with perfect correlations, but suffers from the expected scale ambiguity. The estimation and the original source may have different amplitudes, but both signals behave the same.}
     \label{fig:ica_result_ideal}
@@ -698,7 +698,7 @@ It is also worth noting that, even though the values of $\beta$ and $\sigma$ are
 \begin{figure}[H]
     \centering
     \makebox[\textwidth][c]{%
-        \includegraphics[width=\linewidth]{figuras/ica_result_noise.png}
+        \includegraphics[width=\linewidth]{figuras/ICA/ica_result_noise.png}
     }
     \caption{Separation under noisy instantaneous mixing. Parameters were set to $\sigma=0.1$, $\beta=0.9$ and $\tau=\qty{0}{ms}$. FastICA struggles to maintain temporal correlation with $s_1$, but recovers activation patterns. }
     \label{fig:ica_result_noise}
@@ -714,7 +714,7 @@ Compared to previous cases, Figure \ref{fig:ica_result_noise_delay09} shows that
 \begin{figure}[H]
     \centering
     \makebox[\textwidth][c]{%
-        \includegraphics[width=\linewidth]{figuras/ica_result_noise_delay_09.png}
+        \includegraphics[width=\linewidth]{figuras/ICA/ica_result_noise_delay_09.png}
     }
     \caption{Separation under noisy convolutive mixing. Parameters were set to $\sigma=0.1$, $\beta=0.9$ and $\tau=\qty{5}{ms}$. FastICA now fails to maintain both temporal correlation and activation patterns for $s_1$ due to the significant delayed contribution interference from $s_2$.}
     \label{fig:ica_result_noise_delay09}
@@ -725,7 +725,7 @@ Since the delayed contribution interference is also dependent on $\beta^2$, decr
 \begin{figure}[H]
     \centering
     \makebox[\textwidth][c]{%
-        \includegraphics[width=\linewidth,height=9cm]{figuras/ica_result_noise_delay.png}
+        \includegraphics[width=\linewidth,height=9cm]{figuras/ICA/ica_result_noise_delay.png}
     }
     \caption{Separation under noisy convolutive mixing. Parameters were set to $\sigma=0.1$, $\beta=0.3$ and $\tau=\qty{5}{ms}$. FastICA now experiences a smaller delayed contribution interference due to the reduction of the $\beta$ parameter.}
     \label{fig:ica_result_noise_delay}

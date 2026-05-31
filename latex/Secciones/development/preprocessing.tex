@@ -9,7 +9,7 @@ The preprocessing pipeline developed in this work includes three main stages. Fi
 \begin{figure}[H]
     \centering
     \makebox[\textwidth][c]{%
-        \includegraphics[width=1.25\linewidth]{figuras/preprop_diagram.png}%
+        \includegraphics[width=1.25\linewidth]{figuras/preprocessing/preprop_diagram.png}%
     }
     \caption{Preprocessing pipeline applied to the observed EMG mixtures $c(t)$ to transform data into valid inputs $x(t)$ for the separation algorithms. The pipeline is divided into three stages: filtering, channel scaling and signal decorrelation.}
     \label{fig:preprocessing_pipeline}
@@ -56,7 +56,7 @@ Figure \ref{fig:notch_mag_response} shows the magnitude response of the designed
 \begin{figure}[H]
     \centering
     \makebox[\textwidth][c]{%
-        \includegraphics[width=1\linewidth]{figuras/notch_mag_response.png}
+        \includegraphics[width=1\linewidth]{figuras/preprocessing/notch_mag_response.png}
     }
     \caption{Magnitude response of the designed Notch filter. The frequency component at \qty{60}{Hz} is attenuated while having minimum effect on the EMG band.}
     \label{fig:notch_mag_response}
@@ -70,7 +70,7 @@ This may impact the temporal structure of the signal components close to \qty{60
 \begin{figure}[H]
     \centering
     \makebox[\textwidth][c]{%
-        \includegraphics[width=1\linewidth]{figuras/notch_group_delay.png}%
+        \includegraphics[width=1\linewidth]{figuras/preprocessing/notch_group_delay.png}%
     }
     \caption{Group delay of the designed notch filter. The cut-off frequencies experience a delay around \qty{73}{samples} which has considered when processing the signal. The best option in real world cases is to minimize power-line interference beforehand. }
     \label{fig:notch_group_delay_IIR}
@@ -100,7 +100,7 @@ The magnitude and phase responses of the designed IIR Butterworth filter are sho
 \begin{figure}[H]
     \centering
     \makebox[\textwidth][c]{%
-        \includegraphics[width=1\linewidth]{figuras/mag_phase_response.png}%
+        \includegraphics[width=1\linewidth]{figuras/preprocessing/mag_phase_response.png}%
     }
     \caption{Magnitude and phase response of the desgined bandpass filter.}
     \label{fig:mag_phase_response}
@@ -109,7 +109,7 @@ To better understand this effect, Figure \ref{fig:group_delay_IIR} shows that th
 \begin{figure}[H]
     \centering
     \makebox[\textwidth][c]{%
-        \includegraphics[width=1\linewidth]{figuras/group_delay.png}%
+        \includegraphics[width=1\linewidth]{figuras/preprocessing/group_delay.png}%
     }
     \caption{Group delay of the designed bandpass filter. Although a Bessel filter would provide a more constant delay, the Butterworth filter has a lower and nearly constant group delay within the EMG bandwidth.}
     \label{fig:group_delay_IIR}
@@ -125,7 +125,7 @@ Given that EMG mainly conveys information about motor unit activation, this anal
 \begin{figure}[H]
     \centering
     \makebox[\textwidth][c]{%
-        \includegraphics[width=1\linewidth]{figuras/filtering_envelop_comparison.png}%
+        \includegraphics[width=1\linewidth]{figuras/preprocessing/filtering_envelop_comparison.png}%
     }
     \caption{Envelope comparison of filtered and unfiltered EMG channel 1 signal.}
     \label{fig:filtering_envelope_comparison}
@@ -139,7 +139,7 @@ Figure \ref{fig:filtering_frequency_comparison} shows the frequency-domain compa
 \begin{figure}[H]
     \centering
     \makebox[\textwidth][c]{%
-        \includegraphics[width=1\linewidth]{figuras/filtering_frequency_comparison.png}%
+        \includegraphics[width=1\linewidth]{figuras/preprocessing/filtering_frequency_comparison.png}%
     }
     \caption{Comparison of the FFT and PSD of Channel 1 before and after filtering. In regions where both signals have similar values, the filtered curve appears superimposed on the unfiltered curve. It is also worth to mention that the FFT magnitude plot is in natural scale while PSD is in logarithmic scale.}
     \label{fig:filtering_frequency_comparison}
@@ -212,7 +212,7 @@ This means that the resulting components are decorrelated and normalized to unit
 \begin{figure}[H]
     \centering
     \makebox[\textwidth][c]{%
-        \includegraphics[width=1\linewidth]{figuras/whitening_effect.png}%
+        \includegraphics[width=1\linewidth]{figuras/preprocessing/whitening_effect.png}%
     }
     \caption{Visual whitening process for channels 1 and 32}
     \label{fig:whitening_effect}

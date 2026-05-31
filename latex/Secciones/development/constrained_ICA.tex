@@ -35,7 +35,7 @@ To further clarify this concept, Figure \ref{fig:constrained_conceptual_graph} v
 \begin{figure}[H]
     \centering
     \makebox[\textwidth][c]{%
-        \includegraphics[width=\linewidth]{figuras/constrained_conceptual_graph.png}
+        \includegraphics[width=\linewidth]{figuras/constrained/constrained_conceptual_graph.png}
     }
     \caption{Conceptual illustration of constrained ICA in weak-source scenario. The curve represents a generic non-Gaussianity objective, not real experimental negentropy values.}
     \label{fig:constrained_conceptual_graph}
@@ -356,7 +356,7 @@ Once the weights have been selected, Figure \ref{fig:constrained_regression_ica_
 \begin{figure}[H]
     \centering
     \makebox[\textwidth][c]{%
-        \includegraphics[width=\linewidth,height=6cm]{figuras/comparison_beta_03_tau_5.png}
+        \includegraphics[width=\linewidth,height=6cm]{figuras/constrained/comparison_beta_03_tau_5.png}
     }
     \caption{Comparison  of the RMS envelopes recovered by constrained ICA, regression and standard FastICA algorithms. Parameters were set to $\sigma=0.1$, $\beta=0.3$ and $\tau=\qty{5}{ms}$. Prior information about the signal does not significantly improve recovery if the delayed contribution interference is specifically addressed.}
     \label{fig:constrained_regression_ica_comparison_with_delayed_regression}
@@ -366,7 +366,7 @@ However, if the exact delay is known, a modified version of linear regression ca
 \begin{figure}[H]
     \centering
     \makebox[\textwidth][c]{%
-        \includegraphics[width=\linewidth]{figuras/comparison_beta_05_tau_5_with_delayed_regression.png}
+        \includegraphics[width=\linewidth]{figuras/constrained/comparison_beta_05_tau_5_with_delayed_regression.png}
     }
     \caption{Comparison  of the RMS envelopes recovered by constrained ICA, \textbf{modified regression} and standard FastICA algorithms. Parameters were set to $\sigma=0.1$, $\beta=0.3$ and $\tau=\qty{5}{ms}$. The delayed regression achieves an almost perfect reconstruction as it removes the delayed interference from $s_2$.}
     \label{fig:constrained_regression_ica_comparison}
@@ -407,7 +407,7 @@ However, this slight improvement does not solve the main limitations of FastICA 
 \begin{figure}[H]
     \centering
     \makebox[\textwidth][c]{
-        \includegraphics[width=\linewidth, height=6.5cm]{figuras/comparison_beta_05_tau_0.png}
+        \includegraphics[width=\linewidth, height=6.5cm]{figuras/constrained/comparison_beta_05_tau_0.png}
     }
     \caption{Comparison  of the RMS envelopes recovered by constrained ICA, regression and standard FastICA algorithms. Parameters were set to $\sigma=0.5$, $\beta=0.3$ and $\tau=\qty{0}{ms}$. Results indicate that prior information may help in strong noise scenarios, but there is a limitation due to weak source scenario.}
     \label{fig:constrained_regression_ica_comparison2}

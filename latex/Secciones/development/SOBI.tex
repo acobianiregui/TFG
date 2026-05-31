@@ -201,7 +201,7 @@ Figure \ref{fig:sobi_results_tmr} illustrates the results of the implemented SOB
 \begin{figure}[H]
     \centering
     \makebox[\textwidth][c]{%
-        \includegraphics[width=\linewidth,height=12.1cm]{figuras/sobi_results_TMR.png}
+        \includegraphics[width=\linewidth,height=12.1cm]{figuras/SOBI/sobi_results_TMR.png}
     }
     \caption{Comparison of the signal separation performed by FastICA and the designed SOBI method in the \textbf{TMR patients dataset}. Both algorithms achieve similar results as non-gaussianity and temporal structure appear to provide similar information about the original sources.}
     \label{fig:sobi_results_tmr}
@@ -213,7 +213,7 @@ To evaluate whether SOBI can be actually favorable for the signals in this datas
 \begin{figure}[H]
     \centering
     \makebox[\textwidth][c]{%
-        \includegraphics[width=\linewidth, height=7cm]{figuras/TMR_norm_autocorr.png}
+        \includegraphics[width=\linewidth, height=7cm]{figuras/SOBI/TMR_norm_autocorr.png}
     }
     \caption{Normalized autocorrolation function for both $s_1$ and $s_2$ in the \textbf{TMR patients dataset}. Both sources have similar autorrelation functions, especially for smaller lags.}
     \label{fig:sobi_tmr_autocorr}
@@ -227,7 +227,7 @@ Due to the limited differences observed in the autocorrelation functions of the 
 \begin{figure}[H]
     \centering
     \makebox[\textwidth][c]{%
-        \includegraphics[width=\linewidth,height=6cm]{figuras/artificial_norm_autocorr.png}
+        \includegraphics[width=\linewidth,height=6cm]{figuras/SOBI/artificial_norm_autocorr.png}
     }
     \caption{Normalized autocorrolation function for both $s_1$ and $s_2$ in \textbf{the synthetic dataset}. These new sources now present more different autocorrelation functions.}
     \label{fig:sobi_artificial_autocorr}
@@ -238,7 +238,7 @@ However, in practice this does not mean that ICA is outperformed by SOBI in this
 \begin{figure}[H]
     \centering
     \makebox[\textwidth][c]{%
-        \includegraphics[width=\linewidth]{figuras/sobi_results_artificial_1.png}
+        \includegraphics[width=\linewidth]{figuras/SOBI/sobi_results_artificial_1.png}
     }
     \caption{Comparison of ICA and SOBI in the new synthetics data. Parameters were set to $\sigma=0.1$, $\beta=0.8$ and $\tau=\qty{8}{ms}$. Results seem to indicate that the new temporal structure of the signals provide similar information as non-Gaussianity. }
     \label{fig:sobi_results_artificial_1}
@@ -257,7 +257,7 @@ This raises the question: under which conditions would SOBI be preferred over IC
 \begin{figure}[H]
     \centering
     \makebox[\textwidth][c]{%
-        \includegraphics[width=\linewidth]{figuras/sobi_results_artificial_2.png}
+        \includegraphics[width=\linewidth]{figuras/SOBI/sobi_results_artificial_2.png}
     }
     \caption{Separation under SOBI favorable artificial scenario. Simultaneous EMG sources present similar envelopes, but have different temporal structures. Parameters were set to $\sigma=0.1$, $\beta=0.8$ and $\tau=\qty{8}{ms}$. In this scenario, SOBI achieves a significant improvement in temporal correlation over ICA, but obtains similar RMS envelope correlations.}
     \label{fig:sobi_results_artificial_2}
