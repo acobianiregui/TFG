@@ -1,7 +1,6 @@
 **/recursos/
 /firma.png
 
-figuras/*
 
 !figuras/ICA/
 !figuras/ICA/**
@@ -9,5 +8,5 @@ figuras/*
 !figuras/SOBI/
 !figuras/SOBI/**
 
-!figuras/Regression/
-!figuras/Regression/**
+!figuras/constrained/
+!figuras/constrained/**
