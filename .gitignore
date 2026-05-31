@@ -1,7 +1,7 @@
 **/recursos/
 /firma.png
 
-#figuras/*
+figuras/*
 
 !figuras/ICA/
 !figuras/ICA/**
