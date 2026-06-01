@@ -17,8 +17,8 @@ def condition_signals(u1,u2,pattern=[0, 3, 2,1, 3, 3, 1, 2, 3, 0,2, 3,1],dur_blo
     m2 = np.zeros(N)
     m3 = np.zeros(N)
     
-    block = int(dur_block1)
-    block2 = int(dur_block2)
+    block = int(dur_block1 * fs)
+    block2 = int(dur_block2 * fs)
     for i, state in enumerate(pattern):
         a = i * block
         a2= i * block2
